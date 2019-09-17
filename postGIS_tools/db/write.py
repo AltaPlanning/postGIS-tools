@@ -86,16 +86,9 @@ def csv_to_postgis(
 ):
     """
     Write ``.CSV`` file to a database.
+    Accomplished by importing to a ``pandas.DataFrame`` and calling ``dataframe_to_postgis()``.
 
-    Accomplished by importing to a ``pandas.DataFrame`` and calling ``dataframe_to_postgis()``
 
-
-    :param csv_filepath: r'c:\path\to\your\file.csv'
-    :param table_name: 'name_of_the_output_table'
-    :param db_name: 'name_of_the_database'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
-    :param overwrite: by default is 'localhost', but could also be '192.168.1.14'
-    :return: None
     """
 
     config = {'host': host, 'password': password, 'username': username, 'debug': debug}
