@@ -7,7 +7,7 @@ This script is required for the ``pip install`` process to work.
 from setuptools import setup, find_packages
 
 long_description = """
-postGIS_tools is a pip-installable helper module 
+postGIS_tools is a pip-installable helper module
 that supports spatial data science work in PostgreSQL/PostGIS
 """
 
@@ -18,7 +18,7 @@ install_requires = [r.strip() for r in requirements_lines]
 pkgs = find_packages()
 
 setup(
-    name='alta_data_science',
+    name='postGIS_tools',
     version='1.0.0',
     author='Aaron Fraint, AICP',
     author_email='aaronfraint@altaplanning.com',
