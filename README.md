@@ -2,7 +2,10 @@
 Python tools for interacting with spatial and non-spatial 
 data in PostgreSQL &amp; PostGIS
 
-### Development Environment Setup
+## Documentation
+Documentation for this package can be found at https://postgis-tools.readthedocs.io/en/latest/
+
+## Development Environment Setup
 ```shell script
 conda install -c conda-forge psycopg2
 conda install -c conda-forge geoalchemy2
