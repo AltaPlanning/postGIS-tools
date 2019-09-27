@@ -6,6 +6,9 @@
 Welcome to postGIS-tools's documentation!
 =========================================
 
+This module is intended to simplify the process of using Python
+to perform spatial analysis with data stored in a PostgreSQL/PostGIS environment.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
