@@ -11,8 +11,8 @@ to perform spatial analysis with data stored in a PostgreSQL/PostGIS environment
 
 Some examples of using this module to load and query spatial data:
 
-.. highlight:: python
-::
+.. code-block:: python
+
   import postGIS_tools as pGIS
   pGIS.make_new_database()
 
