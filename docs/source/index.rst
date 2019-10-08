@@ -9,12 +9,26 @@ Welcome to postGIS-tools's documentation!
 This module is intended to simplify the process of using Python
 to perform spatial analysis with data stored in a PostgreSQL/PostGIS environment.
 
-Some examples of using this module to load and query spatial data:
+Here's an example showing how to create a SQL database, load a shapefile, and
+extract the data as a ``geopandas.GeoDataFrame``
 
 .. code-block:: python
 
   import postGIS_tools as pGIS
-  pGIS.make_new_database()
+
+  # Make a new database
+  pGIS.make_new_database("my_new_database", host="localhost")
+
+  # Load a shapefile as a spatial table
+  pGIS.shp_to_postgis("/path/to/my/shapefile.shp", "my_table_in_postgres", "my_new_database")
+
+  # Extract the spatial data as a geopandas geodataframe
+  gdf = pGIS.query_geo_table("my_new_database", "SELECT * FROM my_table_in_postgres")
+
+  # Iterate over all features in the spatial table
+  for idx, row in gdf.iterrows():
+      # do things...
+      pass
 
 .. toctree::
    :maxdepth: 2
