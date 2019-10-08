@@ -3,14 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to postGIS-tools's documentation!
-=========================================
+``postGIS-tools`` documentation
+===============================
 
-This module is intended to simplify the process of using Python
-to perform spatial analysis with data stored in a PostgreSQL/PostGIS environment.
+This module simplifies the process of using ``Python``
+to perform spatial analysis with data stored in a ``PostgreSQL`` database
+with the ``PostGIS`` extension. It leverages other open-source modules including
+``geopandas``, ``pandas``, ``sqlalchemy``, ``geoalchemy2``, and ``psycopg2``.
+
+Assuming you've already installed the dependencies, installation is simple:
+
+.. code-block:: console
+
+  pip install git+https://github.com/aaronfraint/postGIS-tools.git
+
 
 Here's an example showing how to create a SQL database, load a shapefile, and
-extract the data as a ``geopandas.GeoDataFrame``
+extract the data as a ``geopandas.GeoDataFrame``:
 
 .. code-block:: python
 
