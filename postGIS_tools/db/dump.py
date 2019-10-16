@@ -28,27 +28,28 @@ from postGIS_tools.assumptions import THIS_SYSTEM, PG_PASSWORD
 
 
 def postgis_to_shp(
-        database,
-        table_name,
-        output_folder,
-        geom_col='geom',
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        table_name: str,
+        output_folder: str,
+        geom_col: str = 'geom',
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Write a spatial PostGIS table to a shapfile using ``query_geo_table().to_file()``
-
-    TODO: type hints and param definition
 
     :param database: 'name_of_the_database'
     :param table_name: 'name_of_the_table'
     :param output_folder: r'c:\\path\\to\\your\\output\\shapefile\\folder'
     :param geom_col: 'geom' is default spatial column name in postGIS
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
     :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: None
     """
 
@@ -72,20 +73,24 @@ def postgis_to_shp(
 
 
 def dump_all_spatial_tables_to_shapefiles(
-        database_name,
-        output_folder,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database_name: str,
+        output_folder: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Write all spatial tables in a PostGIS database to a subfolder of the output_folder.
 
     :param database_name: 'name_of_the_database'
     :param output_folder: folder path, e.g. r'C:\Egnyte\Shared\SERVICE_AREA\Analytics\data\Projects\El Dorado'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -102,21 +107,25 @@ def dump_all_spatial_tables_to_shapefiles(
 
 
 def dump_database_to_sql_file(
-        db_to_backup,
-        backup_folder,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        db_to_backup: str,
+        backup_folder: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = True
 ):
     """ Save a database stored on a host to a .sql file, using TERMINAL on OSX
 
     TODO: update with declaration of username and port
 
     :param db_to_backup: 'name_of_db'
-    :param host: 'localhost' or '192.168.1.14'
     :param backup_folder: '/Users/my_name/Desktop/backup_folder'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
 
@@ -125,7 +134,8 @@ def dump_database_to_sql_file(
 
     # USE PG_DUMP VIA COMMAND LINE TO SAVE A .SQL FILE
     sql_file = f'{db_to_backup}_{today}.sql'
-    print(f'Using pg_dump to back up {db_to_backup} to {sql_file}')
+    if debug:
+        print(f'Using pg_dump to back up {db_to_backup} to {sql_file}')
 
     if THIS_SYSTEM == 'Darwin':
         c = f""" export PGPASSWORD={password}
