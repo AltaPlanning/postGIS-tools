@@ -28,11 +28,11 @@ def make_geotable_from_query(
         new_tblname,
         query,
         geom_colname='geom',
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Quickly make a new spatial table in PostgreSQL with a query,

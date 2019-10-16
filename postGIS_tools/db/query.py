@@ -25,20 +25,24 @@ from postGIS_tools.assumptions import PG_PASSWORD
 
 
 def query_table(
-        db_name,
-        query,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        db_name: str,
+        query: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Query a table in a database and get the result as a ``pandas.DataFrame``
 
     :param db_name: 'name_of_the_database'
     :param query: 'SELECT * FROM my_table'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: ``pandas.DataFrame``
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -58,14 +62,14 @@ def query_table(
 
 
 def query_geo_table(
-        db_name,
-        query,
-        geom_col='geom',
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        db_name: str,
+        query: str,
+        geom_col: str = 'geom',
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Query a geo table in a SQL database and get the result as a ``geopandas.GeoDataFrame``
@@ -78,7 +82,11 @@ def query_geo_table(
     :param db_name: 'name_of_the_database'
     :param query: 'SELECT gid, pop2015, geom FROM my_table WHERE pop2015 > 1000'
     :param geom_col: the name of the geometry column. Should either be 'geom' or 'geometry'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: ``geopandas.GeoDataFrame``
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}

@@ -26,23 +26,24 @@ from postGIS_tools.assumptions import PG_PASSWORD
 
 
 def execute_query(
-        database,
-        query,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        query: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Use ``psycopg2`` to execute and commit a SQL command in the database.
 
-    TODO: type hints and params
-
     :param database: 'name_of_the_database'
     :param query: 'DROP VIEW IF EXISTS my_view;'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
-    :param debug: bool, controls whether or not the query gets printed out to the console
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: None
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -67,15 +68,15 @@ def execute_query(
 
 
 def add_or_nullify_column(
-        database,
-        tbl,
-        column,
-        data_type,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        tbl: str,
+        column: str,
+        data_type: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Add a column to a table if it doesn't exist yet
@@ -85,7 +86,11 @@ def add_or_nullify_column(
     :param tbl: 'name_of_table'
     :param column: 'col_name'
     :param data_type: any valid PgSQL type: 'TEXT', 'FLOAT', etc.
-    :param debug: boolean True or False
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -102,23 +107,24 @@ def add_or_nullify_column(
 
 
 def drop_table(
-        database,
-        tablename,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        tablename: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Drop a table from a PostgreSQL database
 
-    TODO: type hints and params
-
-    :param database:
-    :param tablename:
-    :param host:
-    :param debug:
+    :param database: name of the database (string)
+    :param tablename: name of the table to drop (string)
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -128,28 +134,32 @@ def drop_table(
 
 
 def project_spatial_table(
-        database,
-        tablename,
-        geom_type,
-        orig_epsg,
-        new_epsg,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        tablename: str,
+        geom_type: str,
+        orig_epsg: int,
+        new_epsg: int,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Alter a table's ``geom`` column to a new EPSG
 
     TODO: type hints and params
 
-    :param database:
-    :param tablename:
-    :param geom_type:
-    :param new_epsg:
-    :param host:
-    :param debug:
+    :param database: name of the database (string)
+    :param tablename: name of the table (string)
+    :param geom_type: name of a SQL-valid geometry type (string)
+    :param orig_epsg: the EPSG that the data currently has (integer)
+    :param new_epsg: the EPSG you want the data to be projected into (integer)
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -161,25 +171,26 @@ def project_spatial_table(
 
 
 def prep_spatial_table(
-        database,
-        spatial_table_name,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        spatial_table_name: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Spatial tables in QGIS coming from PostGIS need a unique ID column and a spatial index.
     This function executes the two SQL queries needed.
     Results in a new column called ``unique_id`` and a spatial index on the existing ``geom`` column
 
-    TODO: type hints and params
-
     :param database: 'name_of_the_db'
     :param spatial_table_name: 'name_of_the_table'
-    :param host: 'localhost' or '192.168.1.14'
-    :param debug:
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: nothing
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -194,15 +205,15 @@ def prep_spatial_table(
 
 
 def register_geometry_column(
-        database,
-        spatial_table,
-        geom_type='Point',
-        epsg=4326,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        spatial_table: str,
+        geom_type: str = 'Point',
+        epsg: int = 4326,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Run this query if your spatial table has an error in QGIS saying:
@@ -216,8 +227,11 @@ def register_geometry_column(
     :param spatial_table: 'name_of_table'
     :param geom_type: a valid PostGIS geom type, as string: 'Point'
     :param epsg: the EPSG that the data is already in. This does not transform anything
-    :param host: 'localhost' or '192.168.1.14'
-    :param debug:
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: nothing
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}

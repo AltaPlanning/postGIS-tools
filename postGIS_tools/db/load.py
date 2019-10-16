@@ -12,13 +12,13 @@ from postGIS_tools.db.create import make_new_database
 
 
 def load_database_file(
-        sql_file_path,
-        database_name,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        sql_file_path: str,
+        database_name: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Load a ``.sql`` file to a new database.
@@ -28,7 +28,11 @@ def load_database_file(
 
     :param sql_file_path: '/path/to/sqlfile.sql'
     :param database_name: 'new_db_name'
-    :param host: 'localhost' or '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}

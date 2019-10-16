@@ -32,9 +32,10 @@ def copy_spatial_table(
         destination_host,
         destination_db,
         epsg=None,
-        username='postgres',
-        password=PG_PASSWORD,
-        debug=False
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: int = 5432,
+        debug: bool = False
 ):
     """
     Copy a spatial table from one db/host to another table/db/host.
@@ -71,10 +72,11 @@ def copy_spatial_table_same_db(
         src_tbl,
         dest_tbl,
         database,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
-        debug=False
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: int = 5432,
+        debug: bool = False
 ):
     """
     Make a copy of a spatial table inside the same database.
@@ -96,10 +98,11 @@ def copy_spatial_table_same_host(
         dest_tbl,
         src_database,
         dest_database,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
-        debug=False
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: int = 5432,
+        debug: bool = False
 ):
     """
     Make a copy of a spatial table on the same host but into a different database.

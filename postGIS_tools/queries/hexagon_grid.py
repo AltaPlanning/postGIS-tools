@@ -8,10 +8,10 @@ Text-based definition of a SQL function to create a hexagon grid overlay
 
 
 def sql_to_make_hex_grid(
-        extent_table,
-        epsg,
-        output_table_name,
-        size
+        extent_table: str,
+        epsg: int,
+        output_table_name: str,
+        size: float
 ):
     """
     This function returns a string with a valid SQL query that creates

@@ -1,17 +1,7 @@
-# ---
-# jupyter:
-#   jupytext:
-#     formats: ipynb,py:light
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.0
-#   kernelspec:
-#     display_name: Python 3
-#     language: python
-#     name: python3
-# ---
+"""
+TODO: docstrings all across file
+
+"""
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -21,11 +11,11 @@ from postGIS_tools.assumptions import PG_PASSWORD
 
 
 def get_database_list(
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=True
+        debug: bool = True
 
 ):
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -43,12 +33,12 @@ def get_database_list(
 
 
 def back_up_all_databases(
-        backup_folder,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        backup_folder: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=True
+        debug: bool = True
 ):
     """ Save each database to file """
 
@@ -59,11 +49,11 @@ def back_up_all_databases(
 
 
 def remove_all_databases(
-    host='localhost',
-    username='postgres',
-    password=PG_PASSWORD,
-    port: int = 5432,
-    debug=True
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: int = 5432,
+        debug: bool = True
 ):
     """ DROP each non-postgres database. Proceed with caution """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}

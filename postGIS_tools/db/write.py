@@ -23,6 +23,8 @@ Examples
     >>> shp_to_postgis(my_shp_path, 'tbl_name_in_database', 'database_name')
 """
 
+from typing import Union
+
 import time
 import pandas as pd
 import geopandas as gpd
@@ -36,24 +38,26 @@ from postGIS_tools.assumptions import PG_PASSWORD
 
 
 def dataframe_to_postgis(
-        db_name,
-        dataframe,
-        table_name,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        db_name: str,
+        dataframe: pd.DataFrame,
+        table_name: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Write a ``pandas.DataFrame`` to a PostgreSQL database.
 
-    TODO: type hints and params
-
     :param db_name: 'name_of_the_database'
     :param dataframe: ``pandas.DataFrame``
     :param table_name: 'name_of_the_table'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: None
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -78,21 +82,27 @@ def dataframe_to_postgis(
 
 
 def csv_to_postgis(
-        csv_filepath,
-        table_name,
-        db_name,
-        overwrite=True,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        csv_filepath: str,
+        table_name: str,
+        db_name: str,
+        overwrite: bool = True,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Write ``.CSV`` file to a database.
     Accomplished by importing to a ``pandas.DataFrame`` and calling ``dataframe_to_postgis()``.
 
-    TODO: type hints and params
+    TODO: params
+
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
 
     """
 
@@ -130,28 +140,30 @@ def csv_to_postgis(
 
 
 def geodataframe_to_postgis(
-        database,
-        geodataframe,
-        output_table_name,
-        output_epsg=None,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        geodataframe: gpd.GeoDataFrame,
+        output_table_name: str,
+        output_epsg: Union[bool, int] = None,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Write a ``geopandas.GeoDataFrame`` to a PostGIS table in a SQL database.
 
     Assumes that the geometry column has already been named 'geometry'
 
-    TODO: type hints and params
-
     :param database: 'name_of_the_database'
     :param geodataframe: geopandas.GeoDataFrame
     :param output_table_name: 'name_of_the_output_table'
     :param output_epsg: if not None, will reproject data from input EPSG to specified EPSG
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return: None
     """
     start_time = time.time()
@@ -218,15 +230,15 @@ def geodataframe_to_postgis(
 
 
 def shp_to_postgis(
-        shp_path,
-        output_table_name,
-        database,
-        output_epsg=None,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        shp_path: str,
+        output_table_name: str,
+        database: str,
+        output_epsg: Union[bool, int] = None,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Read a ``shapefile`` into ``geopandas.GeoDataFrame`` and then use ``geodataframe_to_postgis()``
@@ -237,7 +249,11 @@ def shp_to_postgis(
     :param output_table_name: 'name_of_the_output_table'
     :param database: 'name_of_the_sql_database'
     :param output_epsg: if not None, will reproject data from input EPSG to specified EPSG
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
@@ -263,15 +279,15 @@ def shp_to_postgis(
 
 
 def shp2pgsql(
-        shp_path,
-        new_pg_name,
-        database,
-        srid,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        shp_path: str,
+        new_pg_name: str,
+        database: str,
+        srid: int,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = False
 ):
     """
     Use the command-line ``shp2pgsql`` operation to ingest a shapefile,
@@ -285,10 +301,11 @@ def shp2pgsql(
     :param new_pg_name:
     :param database:
     :param srid:
-    :param host:
-    :param username:
-    :param password:
-    :param debug:
+    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+    :param username: valid PostgreSQL database username (string). eg: 'postgres'
+    :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
+    :param debug: boolean to print messages to console
     :return:
     """
     command = f"""shp2pgsql -s {srid} -I {shp_path} {new_pg_name} | psql -U {username} -d {database} -h {host}"""
