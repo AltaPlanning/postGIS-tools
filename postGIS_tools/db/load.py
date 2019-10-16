@@ -17,18 +17,21 @@ def load_database_file(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Load a ``.sql`` file to a new database.
     NOTE: ``psql`` must be accessible on the system path
 
+    TODO: type hints and params. Add port to psql URI
+
     :param sql_file_path: '/path/to/sqlfile.sql'
     :param database_name: 'new_db_name'
     :param host: 'localhost' or '192.168.1.14'
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     path_list = sql_file_path.split('\\')
     sql_file = path_list[-1]

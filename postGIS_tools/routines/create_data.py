@@ -31,6 +31,7 @@ def make_geotable_from_query(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -39,6 +40,8 @@ def make_geotable_from_query(
 
     This avoids doing the setup manually, which includes adding a primary key, spatial index, etc.
 
+    TODO: type hints and params
+
     :param database: 'my_database'
     :param new_tblname: 'name_of_my_new_table'
     :param query: "SELECT * FROM my_table WHERE highway = 'Local' "
@@ -46,7 +49,7 @@ def make_geotable_from_query(
     :param host: 'localhost'
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print(f'MAKING {new_tblname} FROM:')

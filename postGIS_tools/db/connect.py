@@ -39,6 +39,7 @@ def make_database_connection(
         host: str = 'localhost',
         username: str = 'postgres',
         password: str = PG_PASSWORD,
+        port: int = 5432,
         debug: bool = True
 ):
     """
@@ -49,11 +50,12 @@ def make_database_connection(
     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
     :param username: valid PostgreSQL database username (string). eg: 'postgres'
     :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
     :param debug: boolean to print messages to console
     :return: `psycopg2.connect()` or `sqlalcehmy.create_engine()` object to be used for database I/O operations
     """
 
-    uri = f'postgresql://{username}:{password}@{host}:5432/{db_name}'
+    uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
 
     if debug:
         print(f"Using {method} to connect to:\n\t{uri}")

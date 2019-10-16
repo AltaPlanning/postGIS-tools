@@ -24,10 +24,11 @@ def get_database_list(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=True
 
 ):
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get a list of databases that aren't 'postgres'
     q = """ SELECT datname FROM pg_database 
@@ -46,11 +47,12 @@ def back_up_all_databases(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=True
 ):
     """ Save each database to file """
 
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     for database in get_database_list(**config):
         pGIS.dump_database_to_sql_file(database, backup_folder, **config)
@@ -60,10 +62,11 @@ def remove_all_databases(
     host='localhost',
     username='postgres',
     password=PG_PASSWORD,
+    port: int = 5432,
     debug=True
 ):
     """ DROP each non-postgres database. Proceed with caution """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     for db_name in get_database_list(**config):
         query = f"DROP DATABASE {db_name}"

@@ -40,6 +40,10 @@ def copy_spatial_table(
     Copy a spatial table from one db/host to another table/db/host.
     If an ESPG is passed, this will also reproject the geom column for you.
 
+    TODO: handle different passwords on different databases
+    TODO: incorporate ports
+    TODO: type hints and params
+
     :param source_table_name: 'name_of_source_spatial_table'
     :param destination_table_name: 'name_of_new_copy'
     :param source_host: '192.168.1.14'

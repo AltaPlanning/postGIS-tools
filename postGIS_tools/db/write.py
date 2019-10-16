@@ -42,10 +42,13 @@ def dataframe_to_postgis(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Write a ``pandas.DataFrame`` to a PostgreSQL database.
+
+    TODO: type hints and params
 
     :param db_name: 'name_of_the_database'
     :param dataframe: ``pandas.DataFrame``
@@ -53,7 +56,7 @@ def dataframe_to_postgis(
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: None
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     start_time = time.time()
 
@@ -82,16 +85,18 @@ def csv_to_postgis(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Write ``.CSV`` file to a database.
     Accomplished by importing to a ``pandas.DataFrame`` and calling ``dataframe_to_postgis()``.
 
+    TODO: type hints and params
 
     """
 
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print(f'READING {csv_filepath}')
@@ -132,12 +137,15 @@ def geodataframe_to_postgis(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Write a ``geopandas.GeoDataFrame`` to a PostGIS table in a SQL database.
 
     Assumes that the geometry column has already been named 'geometry'
+
+    TODO: type hints and params
 
     :param database: 'name_of_the_database'
     :param geodataframe: geopandas.GeoDataFrame
@@ -147,7 +155,7 @@ def geodataframe_to_postgis(
     :return: None
     """
     start_time = time.time()
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get the geometry type
     # It's possible there are both MULTIPOLYGONS and POLYGONS. This grabs the MULTI variant
@@ -217,10 +225,13 @@ def shp_to_postgis(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Read a ``shapefile`` into ``geopandas.GeoDataFrame`` and then use ``geodataframe_to_postgis()``
+
+    TODO: type hints and params
 
     :param shp_path:  r'c:\path\to\your\shapefile.shp'
     :param output_table_name: 'name_of_the_output_table'
@@ -229,7 +240,7 @@ def shp_to_postgis(
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print(f'READING - {shp_path}')
@@ -259,6 +270,7 @@ def shp2pgsql(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -267,6 +279,7 @@ def shp2pgsql(
 
     TODO: add handling for machines where PSQL is not on path
     TODO: add handling for machines that are picky about the db password
+    TODO: type hints and params
 
     :param shp_path:
     :param new_pg_name:

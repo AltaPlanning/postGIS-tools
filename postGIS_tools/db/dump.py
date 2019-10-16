@@ -35,20 +35,24 @@ def postgis_to_shp(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Write a spatial PostGIS table to a shapfile using ``query_geo_table().to_file()``
+
+    TODO: type hints and param definition
 
     :param database: 'name_of_the_database'
     :param table_name: 'name_of_the_table'
     :param output_folder: r'c:\\path\\to\\your\\output\\shapefile\\folder'
     :param geom_col: 'geom' is default spatial column name in postGIS
     :param host: by default is 'localhost', but could also be '192.168.1.14'
+    :param port: port number for the PgSQL database. eg: 5432
     :return: None
     """
 
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     try:
         print(f'Creating shapefile from {table_name}')
@@ -73,6 +77,7 @@ def dump_all_spatial_tables_to_shapefiles(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -83,7 +88,7 @@ def dump_all_spatial_tables_to_shapefiles(
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # put everything into a subfolder. Make it if it doesn't exist
     dump_folder = os.path.join(output_folder, f'shps_from_pgdb_{database_name}')
@@ -102,9 +107,12 @@ def dump_database_to_sql_file(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """ Save a database stored on a host to a .sql file, using TERMINAL on OSX
+
+    TODO: update with declaration of username and port
 
     :param db_to_backup: 'name_of_db'
     :param host: 'localhost' or '192.168.1.14'

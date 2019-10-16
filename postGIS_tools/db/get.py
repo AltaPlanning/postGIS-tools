@@ -19,17 +19,20 @@ def fetch_things_from_database(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Use ``psycopg2`` to send query to database and return the ``.fetchall()`` result.
+
+    TODO: type hints and params
 
     :param query: 'SELECT * FROM my_table'
     :param database: 'name_of_the_database'
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: cursor.fetchall() object (list)
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print('QUERYING VIA psycopg2:')
@@ -54,16 +57,19 @@ def get_list_of_tables_in_db(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Return a list of all tables that exist in a given database.
 
+    TODO: type hints and params
+
     :param database: 'name_of_the_database'
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: list of all tables in database
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get a list of all tables that are currently in the database
     q = """SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"""
@@ -83,6 +89,7 @@ def get_full_list_of_tables_in_db(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -94,11 +101,13 @@ def get_full_list_of_tables_in_db(
     - 'raster_columns'
     - 'raster_overviews'
 
+    TODO: type hints and params
+
     :param database: 'name_of_the_database'
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: list of all tables in database
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get a list of all tables that are currently in the database
     q = """SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"""
@@ -116,17 +125,20 @@ def get_list_of_columns_in_table(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Return a list of all columns that exist in a given table
+
+    TODO: type hints and params
 
     :param database: 'name_of_the_database'
     :param table: 'name_of_the_table'
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: list of columns
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     q = """ SELECT column_name 
             FROM information_schema.columns 
@@ -145,6 +157,7 @@ def get_list_of_spatial_tables_in_db(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -154,7 +167,7 @@ def get_list_of_spatial_tables_in_db(
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: list of all spatial tables in database
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get a list of all tables that are currently in the database
     q = """SELECT f_table_name AS tblname FROM geometry_columns"""

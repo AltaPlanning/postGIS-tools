@@ -34,6 +34,7 @@ def load_hexgrid_function(
         host: str = 'localhost',
         username: str = 'postgres',
         password: str = PG_PASSWORD,
+        port: int = 5432,
         debug: bool = False
 ):
     """
@@ -43,10 +44,11 @@ def load_hexgrid_function(
     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
     :param username: valid PostgreSQL database username (string). eg: 'postgres'
     :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
     :param debug: boolean to print messages to console
     :return: None
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print(f'Loading the hex_grid() function into {database} on {host}')
@@ -58,6 +60,7 @@ def make_new_database(
         host: str = 'localhost',
         username: str = 'postgres',
         password: str = PG_PASSWORD,
+        port: int = 5432,
         debug: bool = False
 ):
     """
@@ -67,11 +70,12 @@ def make_new_database(
     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
     :param username: valid PostgreSQL database username (string). eg: 'postgres'
     :param password: password for the supplied username (string). eg: 'mypassword123'
+    :param port: port number for the PgSQL database. eg: 5432
     :param debug: boolean to print messages to console
     :return: None
     """
 
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # check to see if this database already exists
     exists_qry = f""" SELECT EXISTS(

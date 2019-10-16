@@ -30,6 +30,7 @@ def query_table(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -40,7 +41,7 @@ def query_table(
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: ``pandas.DataFrame``
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print('QUERYING...')
@@ -63,6 +64,7 @@ def query_geo_table(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -71,13 +73,15 @@ def query_geo_table(
     Be aware of the name of the geometry column. In PostGIS it's typically called 'geom',
     but geopandas seems to expect 'geometry' instead.
 
+    TODO: type hints and params
+
     :param db_name: 'name_of_the_database'
     :param query: 'SELECT gid, pop2015, geom FROM my_table WHERE pop2015 > 1000'
     :param geom_col: the name of the geometry column. Should either be 'geom' or 'geometry'
     :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: ``geopandas.GeoDataFrame``
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         print('QUERYING...')

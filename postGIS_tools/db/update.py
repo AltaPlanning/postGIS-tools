@@ -31,10 +31,13 @@ def execute_query(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Use ``psycopg2`` to execute and commit a SQL command in the database.
+
+    TODO: type hints and params
 
     :param database: 'name_of_the_database'
     :param query: 'DROP VIEW IF EXISTS my_view;'
@@ -42,7 +45,7 @@ def execute_query(
     :param debug: bool, controls whether or not the query gets printed out to the console
     :return: None
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     if debug:
         start_time = time.time()
@@ -71,6 +74,7 @@ def add_or_nullify_column(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -84,7 +88,7 @@ def add_or_nullify_column(
     :param debug: boolean True or False
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     existing_cols = get_list_of_columns_in_table(database, tbl, **config)
     col_exists = column in existing_cols
@@ -103,10 +107,13 @@ def drop_table(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Drop a table from a PostgreSQL database
+
+    TODO: type hints and params
 
     :param database:
     :param tablename:
@@ -114,7 +121,7 @@ def drop_table(
     :param debug:
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     drop_table_query = f'DROP TABLE {tablename} CASCADE;'
     execute_query(database, drop_table_query, **config)
@@ -129,10 +136,13 @@ def project_spatial_table(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
     Alter a table's ``geom`` column to a new EPSG
+
+    TODO: type hints and params
 
     :param database:
     :param tablename:
@@ -142,7 +152,7 @@ def project_spatial_table(
     :param debug:
     :return:
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     qry = f'''ALTER TABLE {tablename}
               ALTER COLUMN geom TYPE geometry({geom_type}, {new_epsg}) 
@@ -156,6 +166,7 @@ def prep_spatial_table(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -163,13 +174,15 @@ def prep_spatial_table(
     This function executes the two SQL queries needed.
     Results in a new column called ``unique_id`` and a spatial index on the existing ``geom`` column
 
+    TODO: type hints and params
+
     :param database: 'name_of_the_db'
     :param spatial_table_name: 'name_of_the_table'
     :param host: 'localhost' or '192.168.1.14'
     :param debug:
     :return: nothing
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Add a primary key column named 'unique_id'
     unique_id_query = f'ALTER TABLE {spatial_table_name} ADD unique_id serial PRIMARY KEY;'
@@ -188,6 +201,7 @@ def register_geometry_column(
         host='localhost',
         username='postgres',
         password=PG_PASSWORD,
+        port: int = 5432,
         debug=False
 ):
     """
@@ -195,6 +209,8 @@ def register_geometry_column(
     ``There isn't an entry in geometry_columns``.
     Seems to be related to when you make new spatial tables via query
     Spatial tables imported via geopandas do not seem to have this problem
+
+    TODO: type hints and params
 
     :param database: 'name_of_db'
     :param spatial_table: 'name_of_table'
@@ -204,7 +220,7 @@ def register_geometry_column(
     :param debug:
     :return: nothing
     """
-    config = {'host': host, 'password': password, 'username': username, 'debug': debug}
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     query = f''' ALTER TABLE {spatial_table}
                  ALTER COLUMN geom TYPE geometry({geom_type}, {epsg}) 
