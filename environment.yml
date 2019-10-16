@@ -1,0 +1,12 @@
+name: pGIS_dev
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7*
+  - pyproj=1.9*
+  - geopandas
+  - psycopg2
+  - geoalchemy2
+  - sphinx
+  - sphinx_rtd_theme
+  - ipython
