@@ -1,0 +1,16 @@
+[DEFAULT]
+username = postgres
+password = capacity-sasquatch-gnarly
+host = localhost
+port = 5432
+default_db = postgres
+
+[work_cpu]
+password = your-password-here
+
+[digitalocean]
+username = your-username-here
+password = your-password-here
+host = your-host-here.db.ondigitalocean.com
+port = 98765
+default_db = defaultdb
