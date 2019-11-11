@@ -70,22 +70,23 @@ def get_postGIS_config(
     config.read(local_config_file)
 
     # Make a CONFIG_FULL dict with everything and CONFIG without the keys_to_skip
-    CONFIG_FULL = {}
-    keys_to_skip = ["default_db", "super_user"]
+    SU_CONFIG = {}
+    keys_to_skip = ["default_db", "super_user", "super_user_pw"]
     CONFIG = {}
     for host in config.sections():
-        CONFIG_FULL[host] = {key: config[host][key] for key in config[host]}
+        SU_CONFIG[host] = {key: config[host][key] for key in config[host]}
         CONFIG[host] = {key: config[host][key] for key in config[host] if key not in keys_to_skip}
+
+        SU_CONFIG[host]["password"] = SU_CONFIG[host].pop("super_user_pw")
+        SU_CONFIG[host]["username"] = SU_CONFIG[host].pop("super_user")
 
     # Print out options defined in configuration file
     print("\t - Available configurations:")
     for host in CONFIG:
         print(f"\t\t * {host} - {CONFIG[host]}")
-        for key in keys_to_skip:
-            print(f"\t\t\t + {key} : {CONFIG_FULL[host][key]}")
     print(r"\\//\\//" * 10, "\n")
 
-    return (CONFIG, CONFIG_FULL)
+    return (CONFIG, SU_CONFIG)
 
 if __name__ == "__main__":
     get_postGIS_config()
