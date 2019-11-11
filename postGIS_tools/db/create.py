@@ -57,6 +57,7 @@ def load_hexgrid_function(
 
 def make_new_database(
         database_name: str,
+        default_db: str = "postgres",
         host: str = 'localhost',
         username: str = 'postgres',
         password: str = PG_PASSWORD,
@@ -82,7 +83,7 @@ def make_new_database(
                         SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = lower('{database_name}')
                      );  """
 
-    exist_query_response = query_table('postgres', exists_qry, **config)
+    exist_query_response = query_table(default_db, exists_qry, **config)
 
     exists_result = [str(row.exists) for idx, row in exist_query_response.iterrows()]
 
