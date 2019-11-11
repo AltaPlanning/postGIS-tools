@@ -16,6 +16,7 @@ from typing import Union
 
 PG_PASSWORD = "this-is-a-placeholder-password"
 
+THIS_SYSTEM = platform.system()
 
 def get_postGIS_config(
         custom_config_folder: Union[bool, str] = None
@@ -40,11 +41,13 @@ def get_postGIS_config(
     else:
         # Get user and system
         THIS_USER = getpass.getuser()
-        THIS_SYSTEM = platform.system()
 
         # Make filepath to config.txt
         if THIS_SYSTEM == "Darwin":
-            local_config_folder = f"/Users/{THIS_USER}/Documents/pGIS"
+            local_config_folder = f"/Users/{THIS_USER}/Documents/pGIS-configurations"
+
+        elif THIS_SYSTEM == "Windows":
+            local_config_folder = rf"C:\Users\{THIS_USER}\My Documents\pGIS-configurations"
 
     # Build the path to the "config.txt" file
     local_config_file = os.path.join(local_config_folder, "config.txt")
@@ -52,7 +55,12 @@ def get_postGIS_config(
     # Make it by copying the config-sample.txt if it does not yet exist
     if not os.path.exists(local_config_file):
         print(f"\t - Local config file does not yet exist. Copying to {local_config_folder}")
-        os.mkdir(local_config_folder)
+
+        # Make the folder if it does not yet exist:
+        if not os.path.exists(local_config_folder):
+            os.mkdir(local_config_folder)
+
+        # Copy the sample file
         shutil.copyfile("../config-sample.txt", local_config_file)
 
     print(f"\t - {THIS_USER} on {THIS_SYSTEM}, using {local_config_file}")
@@ -65,22 +73,9 @@ def get_postGIS_config(
     CONFIG_FULL = {}
     keys_to_skip = ["default_db", "super_user"]
     CONFIG = {}
-
     for host in config.sections():
         CONFIG_FULL[host] = {key: config[host][key] for key in config[host]}
         CONFIG[host] = {key: config[host][key] for key in config[host] if key not in keys_to_skip}
-
-    # This is a placeholder password for PostgreSQL.
-    # The assumption is that users will pass their own password into the functions that they use
-    PG_PASSWORD = CONFIG_FULL["localhost"]["password"]
-
-    # # Regular CONFIG removes the "default_db" and "super_user" variables
-    # CONFIG = {}
-    # for host in CONFIG_FULL:
-    #     CONFIG[host] = {}
-    #     for key in CONFIG_FULL[host]:
-    #         if key not in ["default_db", "super_user"]:
-    #             CONFIG[host][key] = CONFIG_FULL[host][key]
 
     # Print out options defined in configuration file
     print("\t - Available configurations:")
