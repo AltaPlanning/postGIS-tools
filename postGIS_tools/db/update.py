@@ -22,7 +22,7 @@ import time
 from postGIS_tools.db.get import get_list_of_columns_in_table
 from postGIS_tools.db.connect import make_database_connection
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 
 
 def execute_query(

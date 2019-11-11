@@ -7,7 +7,7 @@ Load a database via a previously-backed up .SQL file
 """
 import os
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 from postGIS_tools.db.create import make_new_database
 
 

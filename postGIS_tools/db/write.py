@@ -34,7 +34,7 @@ from postGIS_tools.db.connect import make_database_connection
 from postGIS_tools.db.get import get_list_of_tables_in_db
 from postGIS_tools.db.update import drop_table, project_spatial_table, prep_spatial_table
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 
 
 def dataframe_to_postgis(

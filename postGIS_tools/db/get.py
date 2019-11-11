@@ -10,7 +10,7 @@ Get simple things out of the database, including:
 """
 from postGIS_tools.db.connect import make_database_connection
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 
 
 def fetch_things_from_database(

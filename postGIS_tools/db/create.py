@@ -26,7 +26,7 @@ from postGIS_tools.db.update import execute_query
 from postGIS_tools.queries.hexagon_grid import hex_grid_function
 from postGIS_tools.db.get import get_full_list_of_tables_in_db
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 
 
 def load_hexgrid_function(

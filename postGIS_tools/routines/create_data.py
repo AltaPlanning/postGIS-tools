@@ -20,7 +20,7 @@ Examples
 from postGIS_tools.db.query import query_geo_table
 from postGIS_tools.db.write import geodataframe_to_postgis
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 
 
 def make_geotable_from_query(

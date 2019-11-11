@@ -30,7 +30,7 @@ Examples
 import psycopg2
 import sqlalchemy
 
-from postGIS_tools.assumptions import PG_PASSWORD
+from postGIS_tools.configurations import PG_PASSWORD
 
 
 def make_database_connection(

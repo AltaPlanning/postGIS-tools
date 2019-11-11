@@ -1,6 +1,6 @@
 from postGIS_tools.db.create import make_new_database
 
-from postGIS_tools.assumptions import CONFIG_FULL
+from postGIS_tools.configurations import CONFIG_FULL
 
 print(CONFIG_FULL)
 

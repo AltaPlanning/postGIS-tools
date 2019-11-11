@@ -1,5 +1,5 @@
 """
-Summary of ``assumptions.py``
+Summary of ``configurations.py``
 -----------------------------
 
 TODO

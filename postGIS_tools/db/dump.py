@@ -24,7 +24,7 @@ from datetime import datetime
 from postGIS_tools.db.query import query_geo_table
 from postGIS_tools.db.get import get_list_of_spatial_tables_in_db
 
-from postGIS_tools.assumptions import THIS_SYSTEM, PG_PASSWORD
+from postGIS_tools.configurations import THIS_SYSTEM, PG_PASSWORD
 
 
 def postgis_to_shp(
