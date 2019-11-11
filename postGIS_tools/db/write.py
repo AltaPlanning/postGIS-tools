@@ -182,7 +182,9 @@ def geodataframe_to_postgis(
         # gdf should have a CRS stored like this: {'init': 'epsg:4326'}
         epsg_code = int(geodataframe.crs['init'].split(':')[1])
     except:
-        return 'This geodataframe does not have a valid EPSG. Aborting.'
+        print('This geodataframe does not have a valid EPSG. Aborting.')
+        print(geodataframe.crs)
+        return
 
 
     # Sanitize the columns before writing to the database
