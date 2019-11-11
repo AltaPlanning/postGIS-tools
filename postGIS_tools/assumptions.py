@@ -1,3 +1,11 @@
+"""
+Summary of ``assumptions.py``
+-----------------------------
+
+TODO
+
+"""
+
 import os
 import platform
 import configparser
@@ -22,7 +30,7 @@ if THIS_SYSTEM == "Darwin":
         os.mkdir(local_config_folder)
         shutil.copyfile("../config-sample.txt", local_config_file)
 
-    print(f"\t - using {local_config_file}")
+print(f"\t - {THIS_USER} on {THIS_SYSTEM}, using {local_config_file}")
 
 # Parse the config.txt
 config = configparser.ConfigParser()
@@ -33,17 +41,21 @@ CONFIG_FULL = {}
 for host in config.sections():
     CONFIG_FULL[host] = {key: config[host][key] for key in config[host]}
 
-# Regular CONFIG removes the "default_db" variable
-CONFIG = CONFIG_FULL.copy()
-for key in CONFIG:
-    del CONFIG[key]["default_db"]
-
 # This is a placeholder password for PostgreSQL.
 # The assumption is that users will pass their own password into the functions that they use
-PG_PASSWORD = CONFIG["localhost"]["password"]
+PG_PASSWORD = CONFIG_FULL["localhost"]["password"]
 
+# Regular CONFIG removes the "default_db" and "super_user" variables
+CONFIG = {}
+for host in CONFIG_FULL:
+    CONFIG[host] = {}
+    for key in CONFIG_FULL[host]:
+        if key not in ["default_db", "super_user"]:
+            CONFIG[host][key] = CONFIG_FULL[host][key]
+
+# Print out options defined in configuration file
 print("\t - Available configurations:")
-for host in config.sections():
-    print(f"\t\t * {host} - {CONFIG_FULL[host]}")
+for host in CONFIG:
+    print(f"\t\t * {host} - {CONFIG[host]}")
 
 print("=+=+=+=+" * 8, "\n")
