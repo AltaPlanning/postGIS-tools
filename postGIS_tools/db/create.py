@@ -93,7 +93,7 @@ def make_new_database(
 
         make_db = f"CREATE DATABASE {database_name};"
 
-        c_postgres = make_database_connection('postgres', 'psycopg2', **config)
+        c_postgres = make_database_connection(default_db, 'psycopg2', **config)
         c_postgres.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = c_postgres.cursor()
 
