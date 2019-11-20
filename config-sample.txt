@@ -1,8 +1,9 @@
 [DEFAULT]
-super_user = postgres
-password = capacity-sasquatch-gnarly
+password = this-is-a-placeholder-password
 port = 5432
 default_db = postgres
+super_user = postgres
+super_user_pw = this-is-another-placeholder-password
 
 [localhost]
 host = localhost
