@@ -247,6 +247,8 @@ def make_geotable_from_query(
         new_tblname,
         query,
         geom_colname='geom',
+        geom_type: str = 'POINT',
+        epsg: int = 4326,
         host: str = 'localhost',
         username: str = 'postgres',
         password: str = PG_PASSWORD,
@@ -270,6 +272,14 @@ def make_geotable_from_query(
     """
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
+    # Confirm that the geom type is valid
+    valid_geom_types = ["POINT", "MULTIPOINT", "POLYGON", "MULTIPOLYGON", "LINESTRING", "MULTILINESTRING"]
+    if geom_type not in valid_geom_types:
+        print(f"Geometry type of {geom_type} is not valid.")
+        print(f"Please use one of the following: {valid_geom_types}")
+        print("Aborting")
+        return
+
     if debug:
         print(f'MAKING {new_tblname} FROM:')
         print(query)
@@ -284,21 +294,8 @@ def make_geotable_from_query(
 
     prep_spatial_table(database, new_tblname, **config)
 
+    register_geometry_column(database, new_tblname, geom_type=geom_type, epsg=epsg, **config)
+
 
 if __name__ == "__main__":
-    DB = "aa_2019_216_mv_modal"
-
-    CONFIG = {
-        "host": "192.168.1.14",
-        "password": "Bunnywithspt54",
-        "debug": True
-    }
-
-    simplified_query = f"""
-    SELECT ST_CENTROID(geom) AS geom
-    FROM road_intersection_clusters
-    UNION
-    SELECT geom FROM road_intersections
-    WHERE NOT ST_WITHIN(geom, (SELECT ST_COLLECT(geom) FROM road_intersection_clusters))
-    """
-    make_geotable_from_query(DB, "road_intersections_simplified", simplified_query, **CONFIG)
+    pass
