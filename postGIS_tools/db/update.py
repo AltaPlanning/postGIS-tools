@@ -240,3 +240,65 @@ def register_geometry_column(
                  ALTER COLUMN geom TYPE geometry({geom_type}, {epsg}) 
                                         USING ST_SetSRID(geom, {epsg})'''
     execute_query(database, query, **config)
+
+
+def make_geotable_from_query(
+        database,
+        new_tblname,
+        query,
+        geom_colname='geom',
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: int = 5432,
+        debug: bool = False
+):
+    """
+    Quickly make a new spatial table in PostgreSQL with a query,
+    using ``geopandas`` and other downstream functions to take care of table setup in the database.
+
+    This avoids doing the setup manually, which includes adding a primary key, spatial index, etc.
+
+    TODO: type hints and params
+
+    :param database: 'my_database'
+    :param new_tblname: 'name_of_my_new_table'
+    :param query: "SELECT * FROM my_table WHERE highway = 'Local' "
+    :param geom_colname: 'geom'
+    :param host: 'localhost'
+    :return:
+    """
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+
+    if debug:
+        print(f'MAKING {new_tblname} FROM:')
+        print(query)
+
+    full_query = f"""
+        DROP TABLE IF EXISTS {new_tblname};
+        CREATE TABLE {new_tblname} AS
+        {query}
+    """
+
+    execute_query(database, full_query, **config)
+
+    prep_spatial_table(database, new_tblname, **config)
+
+
+if __name__ == "__main__":
+    DB = "aa_2019_216_mv_modal"
+
+    CONFIG = {
+        "host": "192.168.1.14",
+        "password": "Bunnywithspt54",
+        "debug": True
+    }
+
+    simplified_query = f"""
+    SELECT ST_CENTROID(geom) AS geom
+    FROM road_intersection_clusters
+    UNION
+    SELECT geom FROM road_intersections
+    WHERE NOT ST_WITHIN(geom, (SELECT ST_COLLECT(geom) FROM road_intersection_clusters))
+    """
+    make_geotable_from_query(DB, "road_intersections_simplified", simplified_query, **CONFIG)
