@@ -143,6 +143,7 @@ def geodataframe_to_postgis(
         database: str,
         geodataframe: gpd.GeoDataFrame,
         output_table_name: str,
+        src_epsg: Union[bool, int] = None,
         output_epsg: Union[bool, int] = None,
         host: str = 'localhost',
         username: str = 'postgres',
@@ -158,6 +159,7 @@ def geodataframe_to_postgis(
     :param database: 'name_of_the_database'
     :param geodataframe: geopandas.GeoDataFrame
     :param output_table_name: 'name_of_the_output_table'
+    :param src_epsg: if not None, will assign the geodataframe this EPSG in the format of {"init": "epsg:2227"}
     :param output_epsg: if not None, will reproject data from input EPSG to specified EPSG
     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
     :param username: valid PostgreSQL database username (string). eg: 'postgres'
@@ -177,14 +179,19 @@ def geodataframe_to_postgis(
     if debug:
         print(f'\t PROCESSING \t {geom_typ} \t {output_table_name}')
 
-    # Get the EPSG value
-    try:
-        # gdf should have a CRS stored like this: {'init': 'epsg:4326'}
-        epsg_code = int(geodataframe.crs['init'].split(':')[1])
-    except:
-        print('This geodataframe does not have a valid EPSG. Aborting.')
-        print(geodataframe.crs)
-        return
+    # Manually set the EPSG if the user passes one
+    if src_epsg:
+        geodataframe.crs = {"init": f"epsg:{src_epsg}"}
+
+    # Otherwise, try to get the EPSG value directly from the geodataframe
+    else:
+        try:
+            # gdf should have a CRS stored like this: {'init': 'epsg:4326'}
+            epsg_code = int(geodataframe.crs['init'].split(':')[1])
+        except:
+            print('This geodataframe does not have a valid EPSG. Aborting.')
+            print(geodataframe.crs)
+            return
 
 
     # Sanitize the columns before writing to the database
