@@ -182,6 +182,7 @@ def geodataframe_to_postgis(
     # Manually set the EPSG if the user passes one
     if src_epsg:
         geodataframe.crs = {"init": f"epsg:{src_epsg}"}
+        epsg_code = src_epsg
 
     # Otherwise, try to get the EPSG value directly from the geodataframe
     else:
@@ -242,6 +243,7 @@ def shp_to_postgis(
         shp_path: str,
         output_table_name: str,
         database: str,
+        src_epsg: Union[bool, int] = None,
         output_epsg: Union[bool, int] = None,
         host: str = 'localhost',
         username: str = 'postgres',
@@ -257,6 +259,7 @@ def shp_to_postgis(
     :param shp_path:  r'c:\path\to\your\shapefile.shp'
     :param output_table_name: 'name_of_the_output_table'
     :param database: 'name_of_the_sql_database'
+    :param src_epsg: if not None, will assign the geodataframe this EPSG in the format of {"init": "epsg:2227"}
     :param output_epsg: if not None, will reproject data from input EPSG to specified EPSG
     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
     :param username: valid PostgreSQL database username (string). eg: 'postgres'
@@ -284,7 +287,7 @@ def shp_to_postgis(
     df = df.reset_index()
 
     # SEND THE GEODATAFRAME TO POSTGIS
-    geodataframe_to_postgis(database, df, output_table_name, output_epsg=output_epsg, **config)
+    geodataframe_to_postgis(database, df, output_table_name, src_epsg=src_epsg, output_epsg=output_epsg, **config)
 
 
 def shp2pgsql(
@@ -319,3 +322,7 @@ def shp2pgsql(
     """
     command = f"""shp2pgsql -s {srid} -I {shp_path} {new_pg_name} | psql -U {username} -d {database} -h {host}"""
     print(command)
+
+
+if __name__ == "__main__":
+    pass
