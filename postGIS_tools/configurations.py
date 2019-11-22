@@ -27,10 +27,7 @@ import getpass
 import shutil
 from typing import Union
 
-
-PG_PASSWORD = "this-is-a-placeholder-password"
-
-SEPARATOR = "- @ - " * 14
+from postGIS_tools.constants import SEPARATOR
 
 # Get user and system
 THIS_USER = getpass.getuser()
@@ -82,8 +79,8 @@ def get_postGIS_config(
         if not os.path.exists(config_file):
 
             # Make the folder if it does not yet exist:
-            if not os.path.exists(local_config_folder):
-                os.mkdir(local_config_folder)
+            if not os.path.exists(LOCAL_CONFIG_FOLDER):
+                os.mkdir(LOCAL_CONFIG_FOLDER)
 
             # Copy the sample file
             shutil.copyfile("../config-sample.txt", config_file)
@@ -91,30 +88,31 @@ def get_postGIS_config(
     print(f"LOADING postGIS CONFIGURATIONS FROM {config_file}")
 
     # Parse the config.txt
-    config = configparser.ConfigParser()
-    config.read(config_file)
+    config_object = configparser.ConfigParser()
+    config_object.read(config_file)
 
     # Make a SUPERUSER_CONFIG dict with super user info and CONFIG without the keys_to_skip
-    CONFIG = {}
-    SUPERUSER_CONFIG = {}
+    config = {}
+    superuser_config = {}
     keys_to_skip = ["default_db", "super_user", "super_user_pw"]
-    for host in config.sections():
-        CONFIG[host] = {key: config[host][key] for key in config[host] if key not in keys_to_skip}
+    for host in config_object.sections():
+        print(host)
+        config[host] = {key: config_object[host][key] for key in config_object[host] if key not in keys_to_skip}
 
-        SUPERUSER_CONFIG[host] = {key: config[host][key] for key in config[host]}
+        superuser_config[host] = {key: config_object[host][key] for key in config_object[host]}
 
-        SUPERUSER_CONFIG[host]["password"] = SUPERUSER_CONFIG[host].pop("super_user_pw")
-        SUPERUSER_CONFIG[host]["username"] = SUPERUSER_CONFIG[host].pop("super_user")
+        superuser_config[host]["password"] = superuser_config[host].pop("super_user_pw")
+        superuser_config[host]["username"] = superuser_config[host].pop("super_user")
 
     # Print out options defined in configuration file
     if verbose:
-        for host in CONFIG:
+        for host in config:
             print(f"\t* {host} *")
-            print(f"\t\t {CONFIG[host]} \n")
+            print(f"\t\t {config[host]} \n")
 
     print(SEPARATOR, "\n")
 
-    return CONFIG, SUPERUSER_CONFIG
+    return config, superuser_config
 
 
 if __name__ == "__main__":
