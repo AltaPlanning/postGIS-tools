@@ -1,6 +1,6 @@
 """
 Overview of ``copy_tables.py``
------------------------
+------------------------------
 
 This module makes it easy to copy data within and between databases and hosts.
 

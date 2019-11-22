@@ -12,4 +12,3 @@ Submodules
 .. toctree::
 
    postGIS_tools.queries.hexagon_grid
-   postGIS_tools.queries.projections

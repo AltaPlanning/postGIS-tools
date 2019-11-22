@@ -13,12 +13,13 @@ Subpackages
 
    postGIS_tools.queries
    postGIS_tools.routines
+   postGIS_tools.tests
 
 Submodules
 ----------
 
 .. toctree::
 
-   postGIS_tools.functions
    postGIS_tools.configurations
    postGIS_tools.constants
+   postGIS_tools.functions

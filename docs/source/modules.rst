@@ -5,5 +5,3 @@ postGIS-tools
    :maxdepth: 4
 
    postGIS_tools
-   postGIS_tools.functions
-   postGIS_tools.configurations
