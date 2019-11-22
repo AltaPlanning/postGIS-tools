@@ -1,5 +1,5 @@
 """
-Overview of ``copy.py``
+Overview of ``copy_tables.py``
 -----------------------
 
 This module makes it easy to copy data within and between databases and hosts.
@@ -17,11 +17,9 @@ Examples
     >>> copy_spatial_table('src_tbl_name', 'dest_tbl_name', 'localhost', 'src_db', '192.168.1.14', 'dest_db')
 
 """
+import postGIS_tools
+from postGIS_tools.constants import PG_PASSWORD
 
-from postGIS_tools.db.query import query_geo_table
-from postGIS_tools.db.write import geodataframe_to_postgis
-
-from postGIS_tools.configurations import PG_PASSWORD
 
 
 def copy_spatial_table(
@@ -62,10 +60,10 @@ def copy_spatial_table(
     dest_config =   {'host': destination_host, 'password': password, 'username': username, 'debug': debug}
 
     # Get a geodataframe with the source_config
-    gdf = query_geo_table(source_db, f'SELECT * FROM {source_table_name}', geom_col='geom', **source_config)
+    gdf = postGIS_tools.functions.query_geo_table(source_db, f'SELECT * FROM {source_table_name}', geom_col='geom', **source_config)
 
     # Write the geodataframe to database with dest_config
-    geodataframe_to_postgis(destination_db, gdf, destination_table_name, output_epsg=epsg, **dest_config)
+    postGIS_tools.functions.geodataframe_to_postgis(destination_db, gdf, destination_table_name, output_epsg=epsg, **dest_config)
 
 
 def copy_spatial_table_same_db(
