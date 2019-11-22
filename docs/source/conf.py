@@ -14,6 +14,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
+if 'READTHEDOCS' not in os.environ:
+    import cython_generated_ext
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +24,7 @@ copyright = '2019, Aaron Fraint, AICP'
 author = 'Aaron Fraint, AICP'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = '1.1.0'
 
 
 # -- General configuration ---------------------------------------------------
