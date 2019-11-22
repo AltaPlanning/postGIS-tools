@@ -30,11 +30,27 @@ from typing import Union
 
 PG_PASSWORD = "this-is-a-placeholder-password"
 
-THIS_SYSTEM = platform.system()
-
 SEPARATOR = "- @ - " * 14
 
+# Get user and system
+THIS_USER = getpass.getuser()
+THIS_SYSTEM = platform.system()
+
+
 LOCAL_USER_CONFIG_FOLDER = "pGIS-configurations"
+
+# Make filepaths to User's desktop and documents folders
+if THIS_SYSTEM == "Darwin":
+    USER_HOME = f"/Users/{THIS_USER}"
+    USER_DOCUMENTS_FOLDER = os.path.join(USER_HOME, "Documents")
+    USER_DESKTOP = os.path.join(USER_HOME, "Desktop")
+
+elif THIS_SYSTEM == "Windows":
+    USER_HOME = rf"C:\Users\{THIS_USER}"
+    USER_DOCUMENTS_FOLDER = os.path.join(USER_HOME, "My Documents")
+    USER_DESKTOP = os.path.join(USER_HOME, "Desktop")
+
+LOCAL_CONFIG_FOLDER = os.path.join(USER_DOCUMENTS_FOLDER, LOCAL_USER_CONFIG_FOLDER)
 
 
 def get_postGIS_config(
@@ -59,18 +75,8 @@ def get_postGIS_config(
     # Otherwise, figure out the filepath dynamically by finding
     # the user's OS-specific "Documents" folder.
     else:
-        # Get user and system
-        THIS_USER = getpass.getuser()
-
-        # Make filepath to config.txt
-        if THIS_SYSTEM == "Darwin":
-            local_config_folder = f"/Users/{THIS_USER}/Documents/{LOCAL_USER_CONFIG_FOLDER}"
-
-        elif THIS_SYSTEM == "Windows":
-            local_config_folder = rf"C:\Users\{THIS_USER}\My Documents\{LOCAL_USER_CONFIG_FOLDER}"
-
         # Build the path to the "config.txt" file
-        config_file = os.path.join(local_config_folder, "config.txt")
+        config_file = os.path.join(LOCAL_CONFIG_FOLDER, "config.txt")
 
         # Make it by copying the config-sample.txt if it does not yet exist
         if not os.path.exists(config_file):
@@ -109,6 +115,7 @@ def get_postGIS_config(
     print(SEPARATOR, "\n")
 
     return CONFIG, SUPERUSER_CONFIG
+
 
 if __name__ == "__main__":
     get_postGIS_config()
