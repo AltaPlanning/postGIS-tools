@@ -13,10 +13,8 @@ Examples
     LOADING postGIS CONFIGURATIONS FROM /Users/aaron/Documents/pGIS-configurations/config.txt
         * localhost *
              {'host': 'localhost', 'username': 'postgres', 'password': 'your-password-here', 'port': '5432'}
-
         * digitalocean *
              {'username': 'your-username-here', 'host': 'your-host-here.db.ondigitalocean.com', 'password': 'your-password-here', 'port': '98765'}
-
     - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ -
 """
 

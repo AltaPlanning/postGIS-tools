@@ -1,10 +1,17 @@
-.. postGIS-tools documentation master file, created by
-   sphinx-quickstart on Tue Sep 17 14:34:13 2019.
+.. postGIS_tools documentation master file, created by
+   sphinx-quickstart on Thu Nov 21 20:40:53 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 ``postGIS-tools`` documentation
 ===============================
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+   modules.rst
+
 
 This module simplifies the process of using ``Python``
 to perform spatial analysis with data stored in a ``PostgreSQL`` database
@@ -38,12 +45,6 @@ extract the data as a ``geopandas.GeoDataFrame``:
   for idx, row in gdf.iterrows():
       # do things...
       pass
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   modules.rst
 
 
 Indices and tables

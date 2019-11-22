@@ -29,7 +29,7 @@ A more hands-on approach entails:
 
 ## Sphinx documentation
 ```shell script
-cd ~/github/data-science/docs
+cd ~/github/postGIS_tools/docs
 sphinx-apidoc -f -e -M -o source/ ../ ../setup.py
 make html
 ```

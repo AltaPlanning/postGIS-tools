@@ -14,17 +14,15 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
-if 'READTHEDOCS' not in os.environ:
-    import cython_generated_ext
 
 # -- Project information -----------------------------------------------------
 
-project = 'postGIS-tools'
+project = 'postGIS_tools'
 copyright = '2019, Aaron Fraint, AICP'
 author = 'Aaron Fraint, AICP'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1.0'
+release = '1.2.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,7 +34,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
-    'sphinx.ext.inheritance_diagram',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -59,6 +56,3 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-# -- This is for the RTD website -------------------------------------------------
-master_doc = 'index'
