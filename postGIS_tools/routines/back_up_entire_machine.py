@@ -6,8 +6,9 @@ TODO: docstrings all across file
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-import postGIS_tools as pGIS
-from postGIS_tools.configurations import PG_PASSWORD
+import postGIS_tools
+from postGIS_tools.constants import PG_PASSWORD
+
 
 
 def get_database_list(
@@ -26,7 +27,7 @@ def get_database_list(
                 AND datname != 'postgres'; """
 
     # Run this query from within the 'postgres' db
-    query_result = pGIS.fetch_things_from_database(q, 'postgres', **config)
+    query_result = postGIS_tools.functions.fetch_things_from_database(q, 'postgres', **config)
     db_list = [x[0] for x in query_result]
 
     return db_list
@@ -45,7 +46,7 @@ def back_up_all_databases(
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     for database in get_database_list(**config):
-        pGIS.dump_database_to_sql_file(database, backup_folder, **config)
+        postGIS_tools.functions.dump_database_to_sql_file(database, backup_folder, **config)
 
 
 def remove_all_databases(
@@ -77,3 +78,9 @@ def remove_all_databases(
         connection.commit()
         connection.close()
 
+if __name__ == "__main__":
+    from postGIS_tools.configurations import get_postGIS_config, USER_DESKTOP
+    config, _ = get_postGIS_config()
+    config["localhost"]["debug"] = True
+
+    back_up_all_databases(USER_DESKTOP, **config["localhost"])
