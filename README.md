@@ -26,3 +26,10 @@ A more hands-on approach entails:
 (pGIS_dev) ~ conda install -c conda-forge sphinx_rtd_theme
 (pGIS_dev) ~ conda install -c conda-forge ipython
 ```
+
+## Sphinx documentation
+```shell script
+cd ~/github/data-science/docs
+sphinx-apidoc -f -e -M -o source/ ../ ../setup.py
+make html
+```
