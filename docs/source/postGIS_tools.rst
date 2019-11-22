@@ -11,7 +11,6 @@ Subpackages
 
 .. toctree::
 
-   postGIS_tools.db
    postGIS_tools.queries
    postGIS_tools.routines
 
@@ -20,4 +19,6 @@ Submodules
 
 .. toctree::
 
-   postGIS_tools.assumptions
+   postGIS_tools.functions
+   postGIS_tools.configurations
+   postGIS_tools.constants
