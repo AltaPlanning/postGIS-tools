@@ -2,6 +2,7 @@ import os
 import sys
 import time
 from datetime import datetime
+from typing import Union
 
 import pandas as pd
 import geopandas as gpd
@@ -10,11 +11,10 @@ import psycopg2
 import sqlalchemy
 from geoalchemy2 import Geometry, WKTElement
 
-from typing import Union
 
 from postGIS_tools.configurations import THIS_SYSTEM
 from postGIS_tools.queries.hexagon_grid import hex_grid_function
-
+from postGIS_tools.logs import log_activity
 from postGIS_tools.constants import PG_PASSWORD
 
 ################################################################################
@@ -357,6 +357,7 @@ def execute_query(
         runtime = round(time.time() - start_time, 2)
         print(f'\t COMMITTED IN - {runtime} seconds')
 
+    log_activity(database, "pGIS.execute_query", query, **config)
 
 def add_or_nullify_column(
         database: str,
@@ -396,6 +397,8 @@ def add_or_nullify_column(
 
     execute_query(database, query, **config)
 
+    log_activity(database, "pGIS.add_or_nullify_column", query, **config)
+
 
 def drop_table(
         database: str,
@@ -422,6 +425,8 @@ def drop_table(
 
     drop_table_query = f'DROP TABLE {tablename} CASCADE;'
     execute_query(database, drop_table_query, **config)
+
+    log_activity(database, "pGIS.drop_table", drop_table_query, **config)
 
 
 def project_spatial_table(
@@ -460,6 +465,8 @@ def project_spatial_table(
               USING ST_Transform( ST_SetSRID( geom, {orig_epsg} ), {new_epsg} ); '''
     execute_query(database, qry, **config)
 
+    log_activity(database, "pGIS.project_spatial_table", qry, **config)
+
 
 def prep_spatial_table(
         database: str,
@@ -493,6 +500,9 @@ def prep_spatial_table(
     # Create a spatial index on the 'geom' column
     spatial_index_query = f'CREATE INDEX gix_{spatial_table_name} ON {spatial_table_name} USING GIST (geom);'
     execute_query(database, spatial_index_query, **config)
+
+    log_activity(database, "pGIS.prep_spatial_table",
+                 "Add unique_id PK and make spatial index on geom column", **config)
 
 
 def register_geometry_column(
@@ -531,6 +541,7 @@ def register_geometry_column(
                  ALTER COLUMN geom TYPE geometry({geom_type}, {epsg}) 
                                         USING ST_SetSRID(geom, {epsg})'''
     execute_query(database, query, **config)
+    log_activity(database, "pGIS.register_geometry_column", query, **config)
 
 
 def make_geotable_from_query(
@@ -582,6 +593,7 @@ def make_geotable_from_query(
     """
 
     execute_query(database, full_query, **config)
+    log_activity(database, "pGIS.make_geotable_from_query", full_query, **config)
 
     prep_spatial_table(database, new_tblname, **config)
 
@@ -616,6 +628,7 @@ def load_hexgrid_function(
     if debug:
         print(f'Loading the hex_grid() function into {database} on {host}')
     execute_query(database, hex_grid_function, **config)
+    log_activity(database, "pGIS.load_hexgrid_function", "see pGIS.queries.hexagon_grid.py", **config)
 
 
 def make_new_database(
@@ -666,12 +679,18 @@ def make_new_database(
         c_postgres.commit()
         c_postgres.close()
 
+        log_activity(database_name, "pGIS.make_new_database", make_db, **config)
+
         # Check if PostGIS already exists by default. If not, add it.
         if 'geometry_columns' not in get_full_list_of_tables_in_db(database_name, **config):
             msg = f'Adding postGIS extension to {database_name}'
             execute_query(database_name, 'CREATE EXTENSION postGIS;', **config)
+            log_activity(database_name, "pGIS.make_new_database", "Added PostGIS", **config)
+
         else:
             msg = f'PostGIS exists by default in {database_name}'
+            log_activity(database_name, "pGIS.make_new_database", "PostGIS exists by default", **config)
+
         if debug:
             print(msg)
 
@@ -726,6 +745,9 @@ def load_database_file(
     print(c)
     os.system(c)
 
+    log_activity(database_name, "pGIS.load_database_file", c, **config)
+
+
 ################################################################################
 # WRITE DATA FROM FILE TO THE DATABASE
 ################################################################################
@@ -773,6 +795,8 @@ def dataframe_to_postgis(
         # REPORT THE RUNTIME
         runtime = time.time() - start_time
         print(f'FINISHED IN {runtime} SECONDS')
+
+    log_activity(db_name, "pGIS.dataframe_to_postgis", f"Wrote pandas.DataFrame to {table_name}", **config)
 
 
 def csv_to_postgis(
@@ -828,6 +852,8 @@ def csv_to_postgis(
     # i.e. 'geo.display-label' becomes 'geodisplaylabel'
     for s in ['.', '-']:
         df.columns = df.columns.str.replace(s, '')
+
+    log_activity(db_name, "pGIS.csv_to_postgis", f"Loaded CSV from {csv_filepath}", **config)
 
     # Save dataframe to database
     dataframe_to_postgis(db_name, df, table_name, **config)
@@ -925,6 +951,9 @@ def geodataframe_to_postgis(
         runtime = round((time.time() - start_time), 2)
         print(f'\t FINISHED IN {runtime} seconds')
 
+    log_activity(database, "pGIS.geodataframe_to_postgis",
+                 f"Wrote geopandas.GeoDataFrame to {output_table_name}", **config)
+
     # If provided an EPSG, alter whatever the native projection was to the output_epsg
     if output_epsg:
         project_spatial_table(database, output_table_name, geom_typ, epsg_code, output_epsg, **config)
@@ -979,6 +1008,8 @@ def shp_to_postgis(
     # RESET THE INDEX AFTER EXPLODING
     df['explode'] = df.index
     df = df.reset_index()
+
+    log_activity(database, "pGIS.shp_to_postgis", f"Loaded .SHP from {shp_path}", **config)
 
     # SEND THE GEODATAFRAME TO POSTGIS
     geodataframe_to_postgis(database, df, output_table_name, src_epsg=src_epsg, output_epsg=output_epsg, **config)
@@ -1064,6 +1095,8 @@ def postgis_to_shp(
         out_shp = os.path.join(output_folder, f'{table_name}.shp')
         df.to_file(out_shp)
 
+        log_activity(database, "pGIS.postgis_to_shp", f"Saved .SHP from {table_name} to {out_shp}", **config)
+
     except:
         print(sys.exc_info()[0])
 
@@ -1096,6 +1129,9 @@ def dump_all_spatial_tables_to_shapefiles(
     if not os.path.exists(dump_folder):
         os.mkdir(dump_folder)
 
+    log_activity(database_name, "pGIS.dump_all_spatial_tables_to_shapefiles",
+                 f"Saving all spatial tables to SHP in {dump_folder}", **config)
+
     # Get a list of all spatial tables and export each one
     spatial_tables = get_list_of_spatial_tables_in_db(database_name, **config)
     for table in spatial_tables:
@@ -1124,6 +1160,7 @@ def dump_database_to_sql_file(
     :param debug: boolean to print messages to console
     :return:
     """
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get a string for today's date, like '2019_02_26'
     today = str(datetime.now()).split(' ')[0].replace('-', '_')
@@ -1132,6 +1169,10 @@ def dump_database_to_sql_file(
     sql_file = f'{db_to_backup}_{today}.sql'
     if debug:
         print(f'Using pg_dump to back up {db_to_backup} to {sql_file}')
+
+
+    log_activity(db_to_backup, 'pGIS.dump_database_to_sql_file',
+                 f"Using pg_dump to create {sql_file}", **config)
 
     if THIS_SYSTEM == 'Darwin':
         c = f""" export PGPASSWORD={password}
