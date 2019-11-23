@@ -239,7 +239,7 @@
 <span class="sd">    :param password: password for the supplied username (string). eg: &#39;mypassword123&#39;</span>
 <span class="sd">    :param port: port number for the PgSQL database. eg: 5432</span>
 <span class="sd">    :param debug: boolean to print messages to console</span>
-<span class="sd">    :return: boolen True or False if the log table exists</span>
+<span class="sd">    :return: boolean True or False if the log table exists</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">exists_query</span> <span class="o">=</span> <span class="s2">&quot;SELECT table_name FROM information_schema.tables WHERE table_schema = &#39;public&#39;&quot;</span>
@@ -291,7 +291,6 @@
 <span class="sd">    :param password: password for the supplied username (string). eg: &#39;mypassword123&#39;</span>
 <span class="sd">    :param port: port number for the PgSQL database. eg: 5432</span>
 <span class="sd">    :param debug: boolean to print messages to console</span>
-<span class="sd">    :return: boolen True or False if the log table exists</span>
 <span class="sd">    :return: inserts a new row into the ``db_history`` table</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
