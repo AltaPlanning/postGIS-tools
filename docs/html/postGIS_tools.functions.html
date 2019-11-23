@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>postGIS_tools.functions module &mdash; postGIS_tools 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="postGIS_tools.constants module" href="postGIS_tools.constants.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> postGIS_tools
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">postGIS_tools package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="modules.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.configurations.html">postGIS_tools.configurations module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.constants.html">postGIS_tools.constants module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">postGIS_tools.functions module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">postGIS_tools</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">postGIS_tools package</a> &raquo;</li>
+        
+      <li>postGIS_tools.functions module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/postGIS_tools.functions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-postGIS_tools.functions">
+<span id="postgis-tools-functions-module"></span><h1>postGIS_tools.functions module<a class="headerlink" href="#module-postGIS_tools.functions" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="postGIS_tools.functions.add_or_nullify_column">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">add_or_nullify_column</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">tbl: str</em>, <em class="sig-param">column: str</em>, <em class="sig-param">data_type: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#add_or_nullify_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.add_or_nullify_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a column to a table if it doesn’t exist yet
+If it does exist, set the entire column to NULL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_database’</p></li>
+<li><p><strong>tbl</strong> – ‘name_of_table’</p></li>
+<li><p><strong>column</strong> – ‘col_name’</p></li>
+<li><p><strong>data_type</strong> – any valid PgSQL type: ‘TEXT’, ‘FLOAT’, etc.</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.csv_to_postgis">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">csv_to_postgis</code><span class="sig-paren">(</span><em class="sig-param">csv_filepath: str</em>, <em class="sig-param">table_name: str</em>, <em class="sig-param">db_name: str</em>, <em class="sig-param">overwrite: bool = True</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#csv_to_postgis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.csv_to_postgis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <code class="docutils literal notranslate"><span class="pre">.CSV</span></code> file to a database.
+Accomplished by importing to a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and calling <code class="docutils literal notranslate"><span class="pre">dataframe_to_postgis()</span></code>.</p>
+<p>TODO: params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.dataframe_to_postgis">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">dataframe_to_postgis</code><span class="sig-paren">(</span><em class="sig-param">db_name: str</em>, <em class="sig-param">dataframe: pandas.core.frame.DataFrame</em>, <em class="sig-param">table_name: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#dataframe_to_postgis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.dataframe_to_postgis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to a PostgreSQL database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_name</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>dataframe</strong> – <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p></li>
+<li><p><strong>table_name</strong> – ‘name_of_the_table’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.drop_table">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">drop_table</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">tablename: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#drop_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.drop_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop a table from a PostgreSQL database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – name of the database (string)</p></li>
+<li><p><strong>tablename</strong> – name of the table to drop (string)</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.dump_all_spatial_tables_to_shapefiles">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">dump_all_spatial_tables_to_shapefiles</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">output_folder: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#dump_all_spatial_tables_to_shapefiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.dump_all_spatial_tables_to_shapefiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all spatial tables in a PostGIS database to a subfolder of the output_folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database_name</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>output_folder</strong> – folder path, e.g. r’C:EgnyteSharedSERVICE_AREAAnalyticsdataProjectsEl Dorado’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.dump_database_to_sql_file">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">dump_database_to_sql_file</code><span class="sig-paren">(</span><em class="sig-param">db_to_backup: str</em>, <em class="sig-param">backup_folder: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#dump_database_to_sql_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.dump_database_to_sql_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a database stored on a host to a .sql file, using TERMINAL on OSX</p>
+<p>TODO: update with declaration of username and port</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_to_backup</strong> – ‘name_of_db’</p></li>
+<li><p><strong>backup_folder</strong> – ‘/Users/my_name/Desktop/backup_folder’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.execute_query">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">execute_query</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">query: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#execute_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.execute_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use <code class="docutils literal notranslate"><span class="pre">psycopg2</span></code> to execute and commit a SQL command in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>query</strong> – ‘DROP VIEW IF EXISTS my_view;’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.fetch_things_from_database">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">fetch_things_from_database</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">database</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#fetch_things_from_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.fetch_things_from_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use <code class="docutils literal notranslate"><span class="pre">psycopg2</span></code> to send query to database and return the <code class="docutils literal notranslate"><span class="pre">.fetchall()</span></code> result.</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> – ‘SELECT * FROM my_table’</p></li>
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>host</strong> – by default is ‘localhost’, but could also be ‘192.168.1.14’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>cursor.fetchall() object (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.geodataframe_to_postgis">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">geodataframe_to_postgis</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">geodataframe: geopandas.geodataframe.GeoDataFrame</em>, <em class="sig-param">output_table_name: str</em>, <em class="sig-param">src_epsg: Union[bool</em>, <em class="sig-param">int] = None</em>, <em class="sig-param">output_epsg: Union[bool</em>, <em class="sig-param">int] = None</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#geodataframe_to_postgis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.geodataframe_to_postgis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a <code class="docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code> to a PostGIS table in a SQL database.</p>
+<p>Assumes that the geometry column has already been named ‘geometry’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>geodataframe</strong> – geopandas.GeoDataFrame</p></li>
+<li><p><strong>output_table_name</strong> – ‘name_of_the_output_table’</p></li>
+<li><p><strong>src_epsg</strong> – if not None, will assign the geodataframe this EPSG in the format of {“init”: “epsg:2227”}</p></li>
+<li><p><strong>output_epsg</strong> – if not None, will reproject data from input EPSG to specified EPSG</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.get_full_list_of_tables_in_db">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">get_full_list_of_tables_in_db</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#get_full_list_of_tables_in_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.get_full_list_of_tables_in_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a FULL list of all tables that exist in a given database.
+Unlike <code class="docutils literal notranslate"><span class="pre">get_list_of_tables_in_db()</span></code>, this one does not ignore the following tables:
+- ‘geography_columns’
+- ‘geometry_columns’
+- ‘spatial_ref_sys’
+- ‘raster_columns’
+- ‘raster_overviews’</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>host</strong> – by default is ‘localhost’, but could also be ‘192.168.1.14’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of all tables in database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.get_list_of_columns_in_table">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">get_list_of_columns_in_table</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">table</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#get_list_of_columns_in_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.get_list_of_columns_in_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all columns that exist in a given table</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>table</strong> – ‘name_of_the_table’</p></li>
+<li><p><strong>host</strong> – by default is ‘localhost’, but could also be ‘192.168.1.14’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of columns</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.get_list_of_spatial_tables_in_db">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">get_list_of_spatial_tables_in_db</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#get_list_of_spatial_tables_in_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.get_list_of_spatial_tables_in_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all spatial tables that exist in a given database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>host</strong> – by default is ‘localhost’, but could also be ‘192.168.1.14’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of all spatial tables in database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.get_list_of_tables_in_db">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">get_list_of_tables_in_db</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#get_list_of_tables_in_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.get_list_of_tables_in_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all tables that exist in a given database.</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>host</strong> – by default is ‘localhost’, but could also be ‘192.168.1.14’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of all tables in database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.load_database_file">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">load_database_file</code><span class="sig-paren">(</span><em class="sig-param">sql_file_path: str</em>, <em class="sig-param">database_name: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#load_database_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.load_database_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a <code class="docutils literal notranslate"><span class="pre">.sql</span></code> file to a new database.
+NOTE: <code class="docutils literal notranslate"><span class="pre">psql</span></code> must be accessible on the system path</p>
+<p>TODO: type hints and params. Add port to psql URI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql_file_path</strong> – ‘/path/to/sqlfile.sql’</p></li>
+<li><p><strong>database_name</strong> – ‘new_db_name’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.load_hexgrid_function">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">load_hexgrid_function</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#load_hexgrid_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.load_hexgrid_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute SQL code that defines the <code class="docutils literal notranslate"><span class="pre">hex_grid()</span></code> function in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.make_database_connection">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">make_database_connection</code><span class="sig-paren">(</span><em class="sig-param">db_name: str</em>, <em class="sig-param">method: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#make_database_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.make_database_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a connection object to a PostgreSQL database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_name</strong> – name of the database (string). eg: ‘aa_santa_clara’</p></li>
+<li><p><strong>method</strong> – name of library (string). Either ‘psycopg2’ or ‘sqlalchemy’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>psycopg2.connect()</cite> or <cite>sqlalcehmy.create_engine()</cite> object to be used for database I/O operations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.make_geotable_from_query">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">make_geotable_from_query</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">new_tblname</em>, <em class="sig-param">query</em>, <em class="sig-param">geom_colname='geom'</em>, <em class="sig-param">geom_type: str = 'POINT'</em>, <em class="sig-param">epsg: int = 4326</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#make_geotable_from_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.make_geotable_from_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quickly make a new spatial table in PostgreSQL with a query,
+using <code class="docutils literal notranslate"><span class="pre">geopandas</span></code> and other downstream functions to take care of table setup in the database.</p>
+<p>This avoids doing the setup manually, which includes adding a primary key, spatial index, etc.</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘my_database’</p></li>
+<li><p><strong>new_tblname</strong> – ‘name_of_my_new_table’</p></li>
+<li><p><strong>query</strong> – “SELECT * FROM my_table WHERE highway = ‘Local’ “</p></li>
+<li><p><strong>geom_colname</strong> – ‘geom’</p></li>
+<li><p><strong>host</strong> – ‘localhost’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.make_new_database">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">make_new_database</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">default_db: str = 'postgres'</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#make_new_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.make_new_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new PostgreSQL database, load PostGIS, and define a custom hexagon function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database_name</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.postgis_to_shp">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">postgis_to_shp</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">table_name: str</em>, <em class="sig-param">output_folder: str</em>, <em class="sig-param">geom_col: str = 'geom'</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#postgis_to_shp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.postgis_to_shp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a spatial PostGIS table to a shapfile using <code class="docutils literal notranslate"><span class="pre">query_geo_table().to_file()</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>table_name</strong> – ‘name_of_the_table’</p></li>
+<li><p><strong>output_folder</strong> – r’c:pathtoyouroutputshapefilefolder’</p></li>
+<li><p><strong>geom_col</strong> – ‘geom’ is default spatial column name in postGIS</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.prep_spatial_table">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">prep_spatial_table</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">spatial_table_name: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#prep_spatial_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.prep_spatial_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spatial tables in QGIS coming from PostGIS need a unique ID column and a spatial index.
+This function executes the two SQL queries needed.
+Results in a new column called <code class="docutils literal notranslate"><span class="pre">unique_id</span></code> and a spatial index on the existing <code class="docutils literal notranslate"><span class="pre">geom</span></code> column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_the_db’</p></li>
+<li><p><strong>spatial_table_name</strong> – ‘name_of_the_table’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.project_spatial_table">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">project_spatial_table</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">tablename: str</em>, <em class="sig-param">geom_type: str</em>, <em class="sig-param">orig_epsg: int</em>, <em class="sig-param">new_epsg: int</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#project_spatial_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.project_spatial_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alter a table’s <code class="docutils literal notranslate"><span class="pre">geom</span></code> column to a new EPSG</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – name of the database (string)</p></li>
+<li><p><strong>tablename</strong> – name of the table (string)</p></li>
+<li><p><strong>geom_type</strong> – name of a SQL-valid geometry type (string)</p></li>
+<li><p><strong>orig_epsg</strong> – the EPSG that the data currently has (integer)</p></li>
+<li><p><strong>new_epsg</strong> – the EPSG you want the data to be projected into (integer)</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.query_geo_table">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">query_geo_table</code><span class="sig-paren">(</span><em class="sig-param">db_name: str</em>, <em class="sig-param">query: str</em>, <em class="sig-param">geom_col: str = 'geom'</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#query_geo_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.query_geo_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query a geo table in a SQL database and get the result as a <code class="docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code></p>
+<p>Be aware of the name of the geometry column. In PostGIS it’s typically called ‘geom’,
+but geopandas seems to expect ‘geometry’ instead.</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_name</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>query</strong> – ‘SELECT gid, pop2015, geom FROM my_table WHERE pop2015 &gt; 1000’</p></li>
+<li><p><strong>geom_col</strong> – the name of the geometry column. Should either be ‘geom’ or ‘geometry’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.query_table">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">query_table</code><span class="sig-paren">(</span><em class="sig-param">db_name: str</em>, <em class="sig-param">query: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#query_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.query_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query a table in a database and get the result as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_name</strong> – ‘name_of_the_database’</p></li>
+<li><p><strong>query</strong> – ‘SELECT * FROM my_table’</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.register_geometry_column">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">register_geometry_column</code><span class="sig-paren">(</span><em class="sig-param">database: str</em>, <em class="sig-param">spatial_table: str</em>, <em class="sig-param">geom_type: str = 'Point'</em>, <em class="sig-param">epsg: int = 4326</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#register_geometry_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.register_geometry_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run this query if your spatial table has an error in QGIS saying:
+<code class="docutils literal notranslate"><span class="pre">There</span> <span class="pre">isn't</span> <span class="pre">an</span> <span class="pre">entry</span> <span class="pre">in</span> <span class="pre">geometry_columns</span></code>.
+Seems to be related to when you make new spatial tables via query
+Spatial tables imported via geopandas do not seem to have this problem</p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – ‘name_of_db’</p></li>
+<li><p><strong>spatial_table</strong> – ‘name_of_table’</p></li>
+<li><p><strong>geom_type</strong> – a valid PostGIS geom type, as string: ‘Point’</p></li>
+<li><p><strong>epsg</strong> – the EPSG that the data is already in. This does not transform anything</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.shp2pgsql">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">shp2pgsql</code><span class="sig-paren">(</span><em class="sig-param">shp_path: str</em>, <em class="sig-param">new_pg_name: str</em>, <em class="sig-param">database: str</em>, <em class="sig-param">srid: int</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#shp2pgsql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.shp2pgsql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the command-line <code class="docutils literal notranslate"><span class="pre">shp2pgsql</span></code> operation to ingest a shapefile,
+and pipe it into PostGIS using <code class="docutils literal notranslate"><span class="pre">psql</span></code></p>
+<p>TODO: add handling for machines where PSQL is not on path
+TODO: add handling for machines that are picky about the db password
+TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shp_path</strong> – </p></li>
+<li><p><strong>new_pg_name</strong> – </p></li>
+<li><p><strong>database</strong> – </p></li>
+<li><p><strong>srid</strong> – </p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.shp_to_postgis">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">shp_to_postgis</code><span class="sig-paren">(</span><em class="sig-param">shp_path: str</em>, <em class="sig-param">output_table_name: str</em>, <em class="sig-param">database: str</em>, <em class="sig-param">src_epsg: Union[bool</em>, <em class="sig-param">int] = None</em>, <em class="sig-param">output_epsg: Union[bool</em>, <em class="sig-param">int] = None</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#shp_to_postgis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.shp_to_postgis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a <code class="docutils literal notranslate"><span class="pre">shapefile</span></code> into <code class="docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code> and then use <code class="docutils literal notranslate"><span class="pre">geodataframe_to_postgis()</span></code></p>
+<p>TODO: type hints and params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shp_path</strong> – r’c:path oyourshapefile.shp’</p></li>
+<li><p><strong>output_table_name</strong> – ‘name_of_the_output_table’</p></li>
+<li><p><strong>database</strong> – ‘name_of_the_sql_database’</p></li>
+<li><p><strong>src_epsg</strong> – if not None, will assign the geodataframe this EPSG in the format of {“init”: “epsg:2227”}</p></li>
+<li><p><strong>output_epsg</strong> – if not None, will reproject data from input EPSG to specified EPSG</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="postGIS_tools.constants.html" class="btn btn-neutral float-left" title="postGIS_tools.constants module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Aaron Fraint, AICP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

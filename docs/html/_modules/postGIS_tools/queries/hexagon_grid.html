@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>postGIS_tools.queries.hexagon_grid &mdash; postGIS_tools 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> postGIS_tools
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">postGIS_tools package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">postGIS_tools</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>postGIS_tools.queries.hexagon_grid</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for postGIS_tools.queries.hexagon_grid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Summary of ``hexagon_grid.py``</span>
+<span class="sd">------------------------------</span>
+
+<span class="sd">Text-based definition of a SQL function to create a hexagon grid overlay</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="sql_to_make_hex_grid"><a class="viewcode-back" href="../../../postGIS_tools.queries.hexagon_grid.html#postGIS_tools.queries.hexagon_grid.sql_to_make_hex_grid">[docs]</a><span class="k">def</span> <span class="nf">sql_to_make_hex_grid</span><span class="p">(</span>
+        <span class="n">extent_table</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">epsg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">output_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns a string with a valid SQL query that creates</span>
+<span class="sd">    a hexagon layer covering the input {extent_table}.</span>
+
+<span class="sd">    :param extent_table: &#39;name_of_table_to_cover&#39;</span>
+<span class="sd">    :param epsg: integer for EPSG you want the hexagons to be in</span>
+<span class="sd">    :param output_table_name: &#39;hexagon_layer&#39;</span>
+<span class="sd">    :param size: float value, 1 = 1 square KM</span>
+<span class="sd">    :return: string, valid SQL query</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">create_hex_grid_command</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    DROP TABLE IF EXISTS </span><span class="si">{output_table_name}</span><span class="s2">;</span>
+<span class="s2">    CREATE TABLE </span><span class="si">{output_table_name}</span><span class="s2"> (</span>
+<span class="s2">      gid SERIAL NOT NULL PRIMARY KEY,</span>
+<span class="s2">      geom GEOMETRY(&#39;POLYGON&#39;, </span><span class="si">{epsg}</span><span class="s2">, 2) NOT NULL</span>
+<span class="s2">    )</span>
+<span class="s2">    WITH (OIDS=FALSE);  </span>
+
+<span class="s2">    INSERT INTO </span><span class="si">{output_table_name}</span><span class="s2"> (geom)</span>
+<span class="s2">    SELECT hex_grid(</span><span class="si">{size}</span><span class="s2">,</span>
+<span class="s2">                    (select st_xmin(st_transform(st_collect(geom), 4326)) from </span><span class="si">{extent_table}</span><span class="s2">),</span>
+<span class="s2">                    (select st_ymin(st_transform(st_collect(geom), 4326)) from </span><span class="si">{extent_table}</span><span class="s2">),</span>
+<span class="s2">                    (select st_xmax(st_transform(st_collect(geom), 4326)) from </span><span class="si">{extent_table}</span><span class="s2">),</span>
+<span class="s2">                    (select st_ymax(st_transform(st_collect(geom), 4326)) from </span><span class="si">{extent_table}</span><span class="s2">),</span>
+<span class="s2">                    4326, </span><span class="si">{epsg}</span><span class="s2">, </span><span class="si">{epsg}</span><span class="s2">);&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">create_hex_grid_command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<span class="n">hex_grid_function</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">------ this function was found and copied from the web link below:</span>
+<span class="s2">------ https://github.com/minus34/postgis-scripts/blob/master/hex-grid/create-hex-grid-function.sql</span>
+<span class="s2">--------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="s2">-- HEX GRID - Create function</span>
+<span class="s2">--------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="s2">--</span>
+<span class="s2">-- Hugh Saalmans (@minus34)</span>
+<span class="s2">-- 2015/04/10</span>
+<span class="s2">--</span>
+<span class="s2">-- DESCRIPTION:</span>
+<span class="s2">--</span>
+<span class="s2">-- Function returns a grid of mathmatically correct hexagonal polygons.</span>
+<span class="s2">-- Useful for hexbinning (the art of mapping clusters of information unbiased by political/historical/statistical boundaries).</span>
+<span class="s2">--</span>
+<span class="s2">-- INPUT</span>
+<span class="s2">--</span>
+<span class="s2">--   areakm2     : area of each hexagon in square km.</span>
+<span class="s2">--                   - note: hexagon size can be off slightly due to coordinate rounding in the calcs.</span>
+<span class="s2">--</span>
+<span class="s2">--   xmin, ymin  : min coords of the grid extents.</span>
+<span class="s2">--</span>
+<span class="s2">--   xmax, ymax  : max coords of the grid extents.</span>
+<span class="s2">--</span>
+<span class="s2">--   inputsrid   : the coordinate system (SRID) of the input min/max coords.</span>
+<span class="s2">--</span>
+<span class="s2">--   workingsrid : the SRID used to process the polygons.</span>
+<span class="s2">--                   - SRID must be a projected coord sys (i.e. in metres) as the calcs require ints. Degrees are out.</span>
+<span class="s2">--                   - should be an equal area SRID such as Albers or Lambert Azimuthal (e.g. Australia = 3577, US = 2163).</span>
+<span class="s2">--                   - using Mercator will NOT return hexagons of equal area due to its distortions (don&#39;t try it in Greenland).</span>
+<span class="s2">--</span>
+<span class="s2">--   ouputsrid   : the SRID of the output polygons.</span>
+<span class="s2">--</span>
+<span class="s2">-- NOTES</span>
+<span class="s2">--</span>
+<span class="s2">--   Hexagon height &amp; width are rounded up &amp; down to the nearest metre, hence the area may be off slightly.</span>
+<span class="s2">--   This is due to the Postgres generate_series function which doesn&#39;t support floats.</span>
+<span class="s2">--</span>
+<span class="s2">--   Why are my areas wrong in QGIS, MapInfo, etc...?</span>
+<span class="s2">--      Let&#39;s assume you created WGS84 lat/long hexagons, you may have noticed the areas differ by almost half in a desktop GIS</span>
+<span class="s2">--      like QGIS or MapInfo Pro. This is due to the way those tools display geographic coordinate systems like WGS84 lat/long.</span>
+<span class="s2">--      Running the following query in PostGIS will confirm the min &amp; max sizes of your hexagons (in km2):</span>
+<span class="s2">--</span>
+<span class="s2">--         SELECT (SELECT (MIN(ST_Area(geom::geography, FALSE)) / 1000000.0)::numeric(10,3) From my_hex_grid) AS minarea,</span>
+<span class="s2">--               (SELECT (MAX(ST_Area(geom::geography, FALSE)) / 1000000.0)::numeric(10,3) From my_hex_grid) AS maxarea;</span>
+<span class="s2">--</span>
+<span class="s2">--   Hey, why doesn&#39;t the grid cover the area I defined using my min/max extents?</span>
+<span class="s2">--      Assuming you used lat/long extents and processed the grid with an equal area projection, the projection caused your</span>
+<span class="s2">--      min/max coords to describe a conical shape, not a rectangular one - and the conical area didn&#39;t cover everything you</span>
+<span class="s2">--      wanted to include.  See au-hex-grid.png as an example of this.</span>
+<span class="s2">--      If you&#39;re bored - learn why projections distort maps here: http://www.icsm.gov.au/mapping/about_projections.html</span>
+<span class="s2">--</span>
+<span class="s2">--   This code is based on this PostGIS Wiki article: https://trac.osgeo.org/postgis/wiki/UsersWikiGenerateHexagonalGrid</span>
+<span class="s2">--</span>
+<span class="s2">--   Dimension calcs are based on formulae from: http://hexnet.org/content/hexagonal-geometry</span>
+<span class="s2">--</span>
+<span class="s2">-- LICENSE</span>
+<span class="s2">--</span>
+<span class="s2">-- This work is licensed under the Apache License, Version 2: https://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="s2">--</span>
+<span class="s2">--------------------------------------------------------------------------------------------------------------------------------</span>
+
+<span class="s2">CREATE OR REPLACE FUNCTION hex_grid(areakm2 FLOAT, xmin FLOAT, ymin FLOAT, xmax FLOAT, ymax FLOAT, inputsrid INTEGER,</span>
+<span class="s2">  workingsrid INTEGER, ouputsrid INTEGER)</span>
+<span class="s2">  RETURNS SETOF geometry AS</span>
+<span class="s2">$BODY$</span>
+
+<span class="s2">DECLARE</span>
+<span class="s2">  minpnt GEOMETRY;</span>
+<span class="s2">  maxpnt GEOMETRY;</span>
+<span class="s2">  x1 INTEGER;</span>
+<span class="s2">  y1 INTEGER;</span>
+<span class="s2">  x2 INTEGER;</span>
+<span class="s2">  y2 INTEGER;</span>
+<span class="s2">  aream2 FLOAT;</span>
+<span class="s2">  qtrwidthfloat FLOAT;</span>
+<span class="s2">  qtrwidth INTEGER;</span>
+<span class="s2">  halfheight INTEGER;</span>
+
+<span class="s2">BEGIN</span>
+
+<span class="s2">  -- Convert input coords to points in the working SRID</span>
+<span class="s2">  minpnt = ST_Transform(ST_SetSRID(ST_MakePoint(xmin, ymin), inputsrid), workingsrid);</span>
+<span class="s2">  maxpnt = ST_Transform(ST_SetSRID(ST_MakePoint(xmax, ymax), inputsrid), workingsrid);</span>
+
+<span class="s2">  -- Get grid extents in working SRID coords</span>
+<span class="s2">  x1 = ST_X(minpnt)::INTEGER;</span>
+<span class="s2">  y1 = ST_Y(minpnt)::INTEGER;</span>
+<span class="s2">  x2 = ST_X(maxpnt)::INTEGER;</span>
+<span class="s2">  y2 = ST_Y(maxpnt)::INTEGER;</span>
+
+<span class="s2">  -- Get height and width of hexagon - FLOOR and CEILING are used to get the hexagon size closer to the requested input area</span>
+<span class="s2">  aream2 := areakm2 * 1000000.0;</span>
+<span class="s2">  qtrwidthfloat := sqrt(aream2/(sqrt(3.0) * (3.0/2.0))) / 2.0;</span>
+
+<span class="s2">  qtrwidth := FLOOR(qtrwidthfloat);</span>
+<span class="s2">  halfheight := CEILING(qtrwidthfloat * sqrt(3.0));</span>
+
+<span class="s2">  -- Return the hexagons - done in pairs, with one offset from the other</span>
+<span class="s2">  RETURN QUERY (</span>
+<span class="s2">    SELECT ST_Transform(ST_SetSRID(ST_Translate(geom, x_series::FLOAT, y_series::FLOAT), workingsrid), ouputsrid) AS geom</span>
+<span class="s2">      FROM generate_series(x1, x2, (qtrwidth * 6)) AS x_series,</span>
+<span class="s2">           generate_series(y1, y2, (halfheight * 2)) AS y_series,</span>
+<span class="s2">           (</span>
+<span class="s2">             SELECT ST_GeomFromText(</span>
+<span class="s2">               format(&#39;POLYGON((0 0, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, 0 0))&#39;,</span>
+<span class="s2">                 qtrwidth, halfheight,</span>
+<span class="s2">                 qtrwidth * 3, halfheight,</span>
+<span class="s2">                 qtrwidth * 4, 0,</span>
+<span class="s2">                 qtrwidth * 3, halfheight * -1,</span>
+<span class="s2">                 qtrwidth, halfheight * -1</span>
+<span class="s2">               )</span>
+<span class="s2">             ) AS geom</span>
+<span class="s2">             UNION</span>
+<span class="s2">             SELECT ST_Translate(</span>
+<span class="s2">               ST_GeomFromText(</span>
+<span class="s2">                 format(&#39;POLYGON((0 0, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">, 0 0))&#39;,</span>
+<span class="s2">                   qtrwidth, halfheight,</span>
+<span class="s2">                   qtrwidth * 3, halfheight,</span>
+<span class="s2">                   qtrwidth * 4, 0,</span>
+<span class="s2">                   qtrwidth * 3, halfheight * -1,</span>
+<span class="s2">                   qtrwidth, halfheight * -1</span>
+<span class="s2">                 )</span>
+<span class="s2">               )</span>
+<span class="s2">             , qtrwidth * 3, halfheight) as geom</span>
+<span class="s2">           ) AS two_hex);</span>
+
+<span class="s2">END$BODY$</span>
+<span class="s2">  LANGUAGE plpgsql VOLATILE</span>
+<span class="s2">  COST 100;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Aaron Fraint, AICP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

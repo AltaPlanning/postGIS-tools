@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>postGIS_tools.configurations &mdash; postGIS_tools 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> postGIS_tools
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">postGIS_tools package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">postGIS_tools</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>postGIS_tools.configurations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for postGIS_tools.configurations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Summary of ``configurations.py``</span>
+<span class="sd">--------------------------------</span>
+
+<span class="sd">TODO</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+
+<span class="sd">    &gt;&gt;&gt; from postGIS_tools.configurations import get_postGIS_config</span>
+<span class="sd">    &gt;&gt;&gt; config, _ = get_postGIS_config()</span>
+<span class="sd">    - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ -</span>
+<span class="sd">    LOADING postGIS CONFIGURATIONS FROM /Users/aaron/Documents/pGIS-configurations/config.txt</span>
+<span class="sd">        * localhost *</span>
+<span class="sd">             {&#39;host&#39;: &#39;localhost&#39;, &#39;username&#39;: &#39;postgres&#39;, &#39;password&#39;: &#39;your-password-here&#39;, &#39;port&#39;: &#39;5432&#39;}</span>
+<span class="sd">        * digitalocean *</span>
+<span class="sd">             {&#39;username&#39;: &#39;your-username-here&#39;, &#39;host&#39;: &#39;your-host-here.db.ondigitalocean.com&#39;, &#39;password&#39;: &#39;your-password-here&#39;, &#39;port&#39;: &#39;98765&#39;}</span>
+<span class="sd">    - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ -</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="k">import</span> <span class="n">SEPARATOR</span>
+
+<span class="c1"># Get user and system</span>
+<span class="n">THIS_USER</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
+<span class="n">THIS_SYSTEM</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+
+
+<span class="n">LOCAL_USER_CONFIG_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;pGIS-configurations&quot;</span>
+
+<span class="c1"># Make filepaths to User&#39;s desktop and documents folders</span>
+<span class="k">if</span> <span class="n">THIS_SYSTEM</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+    <span class="n">USER_HOME</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;/Users/</span><span class="si">{THIS_USER}</span><span class="s2">&quot;</span>
+    <span class="n">USER_DOCUMENTS_FOLDER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">USER_HOME</span><span class="p">,</span> <span class="s2">&quot;Documents&quot;</span><span class="p">)</span>
+    <span class="n">USER_DESKTOP</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">USER_HOME</span><span class="p">,</span> <span class="s2">&quot;Desktop&quot;</span><span class="p">)</span>
+
+<span class="k">elif</span> <span class="n">THIS_SYSTEM</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+    <span class="n">USER_HOME</span> <span class="o">=</span> <span class="n">rf</span><span class="s2">&quot;C:\Users\</span><span class="si">{THIS_USER}</span><span class="s2">&quot;</span>
+    <span class="n">USER_DOCUMENTS_FOLDER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">USER_HOME</span><span class="p">,</span> <span class="s2">&quot;My Documents&quot;</span><span class="p">)</span>
+    <span class="n">USER_DESKTOP</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">USER_HOME</span><span class="p">,</span> <span class="s2">&quot;Desktop&quot;</span><span class="p">)</span>
+
+<span class="n">LOCAL_CONFIG_FOLDER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">USER_DOCUMENTS_FOLDER</span><span class="p">,</span> <span class="n">LOCAL_USER_CONFIG_FOLDER</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_postGIS_config"><a class="viewcode-back" href="../../postGIS_tools.configurations.html#postGIS_tools.configurations.get_postGIS_config">[docs]</a><span class="k">def</span> <span class="nf">get_postGIS_config</span><span class="p">(</span>
+        <span class="n">custom_config_file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a config.txt file and return a tuple wiht dictionaries for each postGIS configuration defined,</span>
+<span class="sd">    Simple CONFIG is keyed on host, username, password, and port.</span>
+<span class="sd">    CONFIG_FULL also has keys for super_user and default_db</span>
+
+<span class="sd">    :param custom_config_path:</span>
+<span class="sd">    :param verbose: boolean to print out configuration values</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">SEPARATOR</span><span class="p">)</span>
+
+    <span class="c1"># Use the specified custom file if provided</span>
+    <span class="k">if</span> <span class="n">custom_config_file</span><span class="p">:</span>
+        <span class="n">config_file</span> <span class="o">=</span> <span class="n">custom_config_file</span>
+
+    <span class="c1"># Otherwise, figure out the filepath dynamically by finding</span>
+    <span class="c1"># the user&#39;s OS-specific &quot;Documents&quot; folder.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Build the path to the &quot;config.txt&quot; file</span>
+        <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LOCAL_CONFIG_FOLDER</span><span class="p">,</span> <span class="s2">&quot;config.txt&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Make it by copying the config-sample.txt if it does not yet exist</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+
+            <span class="c1"># Make the folder if it does not yet exist:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">LOCAL_CONFIG_FOLDER</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">LOCAL_CONFIG_FOLDER</span><span class="p">)</span>
+
+            <span class="c1"># Copy the sample file</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s2">&quot;../config-sample.txt&quot;</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;LOADING postGIS CONFIGURATIONS FROM </span><span class="si">{config_file}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Parse the config.txt</span>
+    <span class="n">config_object</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">config_object</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+
+    <span class="c1"># Make a SUPERUSER_CONFIG dict with super user info and CONFIG without the keys_to_skip</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">superuser_config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">keys_to_skip</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;default_db&quot;</span><span class="p">,</span> <span class="s2">&quot;super_user&quot;</span><span class="p">,</span> <span class="s2">&quot;super_user_pw&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">config_object</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="n">config</span><span class="p">[</span><span class="n">host</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">config_object</span><span class="p">[</span><span class="n">host</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_object</span><span class="p">[</span><span class="n">host</span><span class="p">]</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys_to_skip</span><span class="p">}</span>
+
+        <span class="n">superuser_config</span><span class="p">[</span><span class="n">host</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">config_object</span><span class="p">[</span><span class="n">host</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_object</span><span class="p">[</span><span class="n">host</span><span class="p">]}</span>
+
+        <span class="n">superuser_config</span><span class="p">[</span><span class="n">host</span><span class="p">][</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">superuser_config</span><span class="p">[</span><span class="n">host</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;super_user_pw&quot;</span><span class="p">)</span>
+        <span class="n">superuser_config</span><span class="p">[</span><span class="n">host</span><span class="p">][</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">superuser_config</span><span class="p">[</span><span class="n">host</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;super_user&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Print out options defined in configuration file</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">* </span><span class="si">{host}</span><span class="s2"> *&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2"> </span><span class="si">{config[host]}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">SEPARATOR</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">superuser_config</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">get_postGIS_config</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Aaron Fraint, AICP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
