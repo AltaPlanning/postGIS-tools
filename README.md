@@ -3,7 +3,7 @@ Python tools for interacting with spatial and non-spatial
 data in PostgreSQL &amp; PostGIS
 
 ## Documentation
-Documentation for this package can be found at https://postgis-tools.readthedocs.io/en/latest/
+Documentation for this package can be found at https://aaronfraint.github.io/postGIS-tools/html
 
 ## Development Environment Setup
 The most straightforward way to set up an environment is to use the
