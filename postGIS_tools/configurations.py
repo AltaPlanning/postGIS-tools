@@ -47,7 +47,7 @@ from postGIS_tools.constants import SEPARATOR
 # Get user and system
 THIS_USER = getpass.getuser()
 THIS_SYSTEM = platform.system()
-
+THIS_COMPUTER = platform.node()
 
 LOCAL_USER_CONFIG_FOLDER = "pGIS-configurations"
 
