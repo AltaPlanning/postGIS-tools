@@ -3,6 +3,7 @@ Summary of ``configurations.py``
 --------------------------------
 
 Almost every function takes the following arguments to connect to the database:
+
     - host (i.e. 'localhost' or something like '156.245.3.11')
     - username
     - password
