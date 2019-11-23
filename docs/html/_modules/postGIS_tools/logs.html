@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>postGIS_tools.logs &mdash; postGIS_tools 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> postGIS_tools
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">postGIS-tools</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">postGIS_tools</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>postGIS_tools.logs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for postGIS_tools.logs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Overview of ``logs.py``</span>
+<span class="sd">-----------------------</span>
+
+<span class="sd">This is a low-tech solution to leaving a trail of breadcrumbs behind</span>
+<span class="sd">in your ``PostgreSQL`` database. It creates a table named ``db_history``</span>
+<span class="sd">and many ``postGIS_tools.functions`` use the ``log_activity()`` function</span>
+<span class="sd">to update this table after successfully completing their task.</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+
+<span class="sd">    &gt;&gt;&gt; import postGIS_tools as pGIS</span>
+<span class="sd">    &gt;&gt;&gt; pGIS.log_activity(&quot;my_database&quot;, &quot;execute_query&quot;, &quot;UPDATE my_table SET my_col = &#39;my value&#39;&quot;, debug=True)</span>
+<span class="sd">    Logging to db_history:</span>
+<span class="sd">            INSERT INTO db_history (username, function_name, query_text, update_time, user_os, user_cpu)</span>
+<span class="sd">                VALUES (&#39;aaron&#39;, &#39;execute_query&#39;, &#39;UPDATE my_table SET my_col = &#39;&#39;my value&#39;&#39;&#39;,</span>
+<span class="sd">                        &#39;2019-11-23 09:00:26 PST&#39;, &#39;Darwin&#39;, &#39;Aaron-MBP.local&#39;);</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">psycopg2</span>
+
+<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="k">import</span> <span class="n">PG_PASSWORD</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="k">import</span> <span class="n">THIS_SYSTEM</span><span class="p">,</span> <span class="n">THIS_USER</span><span class="p">,</span> <span class="n">THIS_COMPUTER</span>
+
+
+<span class="k">def</span> <span class="nf">_make_log_table</span><span class="p">(</span>
+        <span class="n">db_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PG_PASSWORD</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Execute a query to create the ``db_history`` table.</span>
+
+<span class="sd">    :param db_name: name of the database</span>
+<span class="sd">    :param host: name of the pgSQL host (string). eg: &#39;localhost&#39; or &#39;192.168.1.14&#39;</span>
+<span class="sd">    :param username: valid PostgreSQL database username (string). eg: &#39;postgres&#39;</span>
+<span class="sd">    :param password: password for the supplied username (string). eg: &#39;mypassword123&#39;</span>
+<span class="sd">    :param port: port number for the PgSQL database. eg: 5432</span>
+<span class="sd">    :param debug: boolean to print messages to console</span>
+<span class="sd">    :return: creates ``db_history`` table within specified database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query_to_make_table</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE db_history (</span>
+<span class="s2">            uid SERIAL PRIMARY KEY,</span>
+<span class="s2">            username VARCHAR(255),</span>
+<span class="s2">            function_name TEXT,</span>
+<span class="s2">            query_text TEXT,</span>
+<span class="s2">            update_time TIMESTAMP WITH TIME ZONE, </span>
+<span class="s2">            user_os VARCHAR(255),</span>
+<span class="s2">            user_cpu VARCHAR(255)</span>
+<span class="s2">        )</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Making db_history log table within </span><span class="si">{uri}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query_to_make_table</span><span class="p">)</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">DatabaseError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">connection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_log_table_exists</span><span class="p">(</span>
+        <span class="n">db_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PG_PASSWORD</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the ``db_history`` log table exists. If not, run ``_make_log_table()``</span>
+
+<span class="sd">    :param db_name: name of the database</span>
+<span class="sd">    :param host: name of the pgSQL host (string). eg: &#39;localhost&#39; or &#39;192.168.1.14&#39;</span>
+<span class="sd">    :param username: valid PostgreSQL database username (string). eg: &#39;postgres&#39;</span>
+<span class="sd">    :param password: password for the supplied username (string). eg: &#39;mypassword123&#39;</span>
+<span class="sd">    :param port: port number for the PgSQL database. eg: 5432</span>
+<span class="sd">    :param debug: boolean to print messages to console</span>
+<span class="sd">    :return: boolen True or False if the log table exists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">exists_query</span> <span class="o">=</span> <span class="s2">&quot;SELECT table_name FROM information_schema.tables WHERE table_schema = &#39;public&#39;&quot;</span>
+
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">exists_query</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="n">result_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;db_history&quot;</span> <span class="ow">in</span> <span class="n">result_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The db_history log table does not yet exist&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="log_activity"><a class="viewcode-back" href="../../postGIS_tools.logs.html#postGIS_tools.logs.log_activity">[docs]</a><span class="k">def</span> <span class="nf">log_activity</span><span class="p">(</span>
+        <span class="n">db_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">function_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">query_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">local_timezone</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;US/Pacific&quot;</span><span class="p">,</span>
+        <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PG_PASSWORD</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Record what was done to a database in a new row within the ``db_history`` table.</span>
+<span class="sd">    User must specify the database and function name that was run.</span>
+<span class="sd">    Optionally, the raw SQL code can also be stored in the query_text column.</span>
+
+<span class="sd">    If the ``db_history`` table does not exist yet, make the table before inserting this row.</span>
+
+<span class="sd">    :param db_name: name of the database (string)</span>
+<span class="sd">    :param function_name: the name of the function that was run (string)</span>
+<span class="sd">    :param query_text: the SQL text that was run (string)</span>
+<span class="sd">    :param local_timezone: the user&#39;s local (or preferred) timezone (string). Must match ``datetime.datetime`` options</span>
+<span class="sd">    :param host: name of the pgSQL host (string). eg: &#39;localhost&#39; or &#39;192.168.1.14&#39;</span>
+<span class="sd">    :param username: valid PostgreSQL database username (string). eg: &#39;postgres&#39;</span>
+<span class="sd">    :param password: password for the supplied username (string). eg: &#39;mypassword123&#39;</span>
+<span class="sd">    :param port: port number for the PgSQL database. eg: 5432</span>
+<span class="sd">    :param debug: boolean to print messages to console</span>
+<span class="sd">    :return: boolen True or False if the log table exists</span>
+<span class="sd">    :return: inserts a new row into the ``db_history`` table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+
+    <span class="c1"># Create the db_history log table if it doesn&#39;t exist yet</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_log_table_exists</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">):</span>
+        <span class="n">_make_log_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="c1"># Get a timestamp for right now</span>
+    <span class="n">right_now</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="n">local_timezone</span><span class="p">)</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">right_now</span> <span class="o">=</span> <span class="n">right_now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S %Z&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Escape any single quotes in the query text</span>
+    <span class="n">query_text</span> <span class="o">=</span> <span class="n">query_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Insert the values as a new row</span>
+    <span class="n">insert_query</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        INSERT INTO db_history (username, function_name, query_text, update_time, user_os, user_cpu)</span>
+<span class="s2">            VALUES (&#39;</span><span class="si">{THIS_USER}</span><span class="s2">&#39;, &#39;</span><span class="si">{function_name}</span><span class="s2">&#39;, &#39;</span><span class="si">{query_text}</span><span class="s2">&#39;, </span>
+<span class="s2">                    &#39;</span><span class="si">{right_now}</span><span class="s2">&#39;, &#39;</span><span class="si">{THIS_SYSTEM}</span><span class="s2">&#39;, &#39;</span><span class="si">{THIS_COMPUTER}</span><span class="s2">&#39;);</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Logging to db_history:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">insert_query</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">insert_query</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">DatabaseError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">connection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">log_activity</span><span class="p">(</span><span class="s2">&quot;ds_test&quot;</span><span class="p">,</span> <span class="s2">&quot;testing_function2&quot;</span><span class="p">,</span> <span class="s2">&quot;UPDATE my_table SET my_col = &#39;my value&#39;&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Aaron Fraint, AICP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

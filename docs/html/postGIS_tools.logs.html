@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>postGIS_tools.logs module &mdash; postGIS_tools 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="postGIS_tools.functions module" href="postGIS_tools.functions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> postGIS_tools
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">postGIS-tools</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="postGIS_tools.html">postGIS_tools package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="postGIS_tools.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.configurations.html">postGIS_tools.configurations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.constants.html">postGIS_tools.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.functions.html">postGIS_tools.functions module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">postGIS_tools.logs module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">postGIS_tools</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">postGIS-tools</a> &raquo;</li>
+        
+          <li><a href="postGIS_tools.html">postGIS_tools package</a> &raquo;</li>
+        
+      <li>postGIS_tools.logs module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/postGIS_tools.logs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-postGIS_tools.logs">
+<span id="postgis-tools-logs-module"></span><h1>postGIS_tools.logs module<a class="headerlink" href="#module-postGIS_tools.logs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview-of-logs-py">
+<h2>Overview of <code class="docutils literal notranslate"><span class="pre">logs.py</span></code><a class="headerlink" href="#overview-of-logs-py" title="Permalink to this headline">¶</a></h2>
+<p>This is a low-tech solution to leaving a trail of breadcrumbs behind
+in your <code class="docutils literal notranslate"><span class="pre">PostgreSQL</span></code> database. It creates a table named <code class="docutils literal notranslate"><span class="pre">db_history</span></code>
+and many <code class="docutils literal notranslate"><span class="pre">postGIS_tools.functions</span></code> use the <code class="docutils literal notranslate"><span class="pre">log_activity()</span></code> function
+to update this table after successfully completing their task.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">postGIS_tools</span> <span class="k">as</span> <span class="nn">pGIS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pGIS</span><span class="o">.</span><span class="n">log_activity</span><span class="p">(</span><span class="s2">&quot;my_database&quot;</span><span class="p">,</span> <span class="s2">&quot;execute_query&quot;</span><span class="p">,</span> <span class="s2">&quot;UPDATE my_table SET my_col = &#39;my value&#39;&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">Logging to db_history:</span>
+<span class="go">        INSERT INTO db_history (username, function_name, query_text, update_time, user_os, user_cpu)</span>
+<span class="go">            VALUES (&#39;aaron&#39;, &#39;execute_query&#39;, &#39;UPDATE my_table SET my_col = &#39;&#39;my value&#39;&#39;&#39;,</span>
+<span class="go">                    &#39;2019-11-23 09:00:26 PST&#39;, &#39;Darwin&#39;, &#39;Aaron-MBP.local&#39;);</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="postGIS_tools.logs.log_activity">
+<code class="sig-prename descclassname">postGIS_tools.logs.</code><code class="sig-name descname">log_activity</code><span class="sig-paren">(</span><em class="sig-param">db_name: str</em>, <em class="sig-param">function_name: str</em>, <em class="sig-param">query_text: str = ''</em>, <em class="sig-param">local_timezone: str = 'US/Pacific'</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/logs.html#log_activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.logs.log_activity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record what was done to a database in a new row within the <code class="docutils literal notranslate"><span class="pre">db_history</span></code> table.
+User must specify the database and function name that was run.
+Optionally, the raw SQL code can also be stored in the query_text column.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">db_history</span></code> table does not exist yet, make the table before inserting this row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_name</strong> – name of the database (string)</p></li>
+<li><p><strong>function_name</strong> – the name of the function that was run (string)</p></li>
+<li><p><strong>query_text</strong> – the SQL text that was run (string)</p></li>
+<li><p><strong>local_timezone</strong> – the user’s local (or preferred) timezone (string). Must match <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> options</p></li>
+<li><p><strong>host</strong> – name of the pgSQL host (string). eg: ‘localhost’ or ‘192.168.1.14’</p></li>
+<li><p><strong>username</strong> – valid PostgreSQL database username (string). eg: ‘postgres’</p></li>
+<li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
+<li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
+<li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>boolen True or False if the log table exists</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>inserts a new row into the <code class="docutils literal notranslate"><span class="pre">db_history</span></code> table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="postGIS_tools.functions.html" class="btn btn-neutral float-left" title="postGIS_tools.functions module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Aaron Fraint, AICP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

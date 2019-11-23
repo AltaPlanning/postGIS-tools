@@ -93,7 +93,7 @@ def _log_table_exists(
     :param password: password for the supplied username (string). eg: 'mypassword123'
     :param port: port number for the PgSQL database. eg: 5432
     :param debug: boolean to print messages to console
-    :return: boolen True or False if the log table exists
+    :return: boolean True or False if the log table exists
     """
 
     exists_query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
@@ -145,7 +145,7 @@ def log_activity(
     :param password: password for the supplied username (string). eg: 'mypassword123'
     :param port: port number for the PgSQL database. eg: 5432
     :param debug: boolean to print messages to console
-    :return: boolen True or False if the log table exists
+    :return: boolean True or False if the log table exists
     :return: inserts a new row into the ``db_history`` table
     """
     uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
