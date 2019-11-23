@@ -148,7 +148,14 @@
 <span class="sd">Summary of ``configurations.py``</span>
 <span class="sd">--------------------------------</span>
 
-<span class="sd">TODO</span>
+<span class="sd">Almost every function takes the following arguments to connect to the database:</span>
+<span class="sd">    - host (i.e. &#39;localhost&#39; or something like &#39;156.245.3.11&#39;)</span>
+<span class="sd">    - username</span>
+<span class="sd">    - password</span>
+<span class="sd">    - port</span>
+
+<span class="sd">Using ``get_postGIS_config()`` from the ``postGIS_tools.configurations`` module makes life easier</span>
+<span class="sd">by creating a local ``.txt`` file and reading all these values from file.</span>
 
 <span class="sd">Examples</span>
 <span class="sd">--------</span>
@@ -162,6 +169,15 @@
 <span class="sd">        * digitalocean *</span>
 <span class="sd">             {&#39;username&#39;: &#39;your-username-here&#39;, &#39;host&#39;: &#39;your-host-here.db.ondigitalocean.com&#39;, &#39;password&#39;: &#39;your-password-here&#39;, &#39;port&#39;: &#39;98765&#39;}</span>
 <span class="sd">    - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ -</span>
+
+
+<span class="sd">Now you have a ``config`` object that is a dictionary keyed on the 4 arguments (host, username, password, port).</span>
+
+<span class="sd">    &gt;&gt;&gt; import postGIS_tools as pGIS</span>
+<span class="sd">    &gt;&gt;&gt; config, _ = pGIS.configurations.get_postGIS_config()</span>
+<span class="sd">    &gt;&gt;&gt; pGIS.make_new_database(&quot;my_database&quot;, debug=True, **config[&quot;localhost&quot;])</span>
+
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>

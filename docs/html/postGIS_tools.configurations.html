@@ -167,7 +167,17 @@
 <span id="postgis-tools-configurations-module"></span><h1>postGIS_tools.configurations module<a class="headerlink" href="#module-postGIS_tools.configurations" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="summary-of-configurations-py">
 <h2>Summary of <code class="docutils literal notranslate"><span class="pre">configurations.py</span></code><a class="headerlink" href="#summary-of-configurations-py" title="Permalink to this headline">¶</a></h2>
-<p>TODO</p>
+<dl class="simple">
+<dt>Almost every function takes the following arguments to connect to the database:</dt><dd><ul class="simple">
+<li><p>host (i.e. ‘localhost’ or something like ‘156.245.3.11’)</p></li>
+<li><p>username</p></li>
+<li><p>password</p></li>
+<li><p>port</p></li>
+</ul>
+</dd>
+</dl>
+<p>Using <code class="docutils literal notranslate"><span class="pre">get_postGIS_config()</span></code> from the <code class="docutils literal notranslate"><span class="pre">postGIS_tools.configurations</span></code> module makes life easier
+by creating a local <code class="docutils literal notranslate"><span class="pre">.txt</span></code> file and reading all these values from file.</p>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
@@ -180,6 +190,12 @@
 <span class="go">    * digitalocean *</span>
 <span class="go">         {&#39;username&#39;: &#39;your-username-here&#39;, &#39;host&#39;: &#39;your-host-here.db.ondigitalocean.com&#39;, &#39;password&#39;: &#39;your-password-here&#39;, &#39;port&#39;: &#39;98765&#39;}</span>
 <span class="go">- @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ -</span>
+</pre></div>
+</div>
+<p>Now you have a <code class="docutils literal notranslate"><span class="pre">config</span></code> object that is a dictionary keyed on the 4 arguments (host, username, password, port).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">postGIS_tools</span> <span class="k">as</span> <span class="nn">pGIS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pGIS</span><span class="o">.</span><span class="n">configurations</span><span class="o">.</span><span class="n">get_postGIS_config</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pGIS</span><span class="o">.</span><span class="n">make_new_database</span><span class="p">(</span><span class="s2">&quot;my_database&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <dl class="function">
