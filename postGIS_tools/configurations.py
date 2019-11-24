@@ -67,7 +67,7 @@ LOCAL_CONFIG_FOLDER = os.path.join(USER_DOCUMENTS_FOLDER, LOCAL_USER_CONFIG_FOLD
 
 def get_postGIS_config(
         custom_config_file: Union[bool, str] = None,
-        verbose: bool = True
+        verbose: bool = False
 ) -> tuple:
     """
     Read a config.txt file and return a tuple wiht dictionaries for each postGIS configuration defined,
