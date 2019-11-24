@@ -225,6 +225,103 @@ def get_list_of_spatial_tables_in_db(
 
     return spatial_table_names
 
+
+def get_database_list(
+        default_db: str = "postgres",
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: int = 5432,
+        debug: bool = True
+
+):
+    """
+    TODO docstring
+
+    :param host:
+    :param username:
+    :param password:
+    :param port:
+    :param debug:
+    :return:
+    """
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+
+    # Get a list of databases that aren't 'postgres'
+    q = """ SELECT datname FROM pg_database 
+            WHERE datistemplate = false
+                AND datname != 'postgres'; """
+
+    # Run this query from within the 'postgres' db
+    query_result = fetch_things_from_database(q, default_db, **config)
+    db_list = [x[0] for x in query_result]
+
+    return db_list
+
+################################################################################
+# TEST THAT THINGS EXIST
+################################################################################
+
+
+def database_exists(
+        database,
+        default_db: str = "postgres",
+        host='localhost',
+        username='postgres',
+        password=PG_PASSWORD,
+        port: int = 5432,
+        debug=False
+):
+    """
+    TODO docstring
+
+    :param database:
+    :param host:
+    :param username:
+    :param password:
+    :param port:
+    :param debug:
+    :return:
+    """
+    config = {'host': host, 'username': username, 'password': password, 'port': port, "default_db": default_db, 'debug': debug}
+    db_list = get_database_list(**config)
+
+    if database in db_list:
+        return True
+    else:
+        return False
+
+
+def spatial_table_exists(
+        table,
+        database,
+        host='localhost',
+        username='postgres',
+        password=PG_PASSWORD,
+        port: int = 5432,
+        debug=False
+):
+    """
+    TODO docstring
+
+    :param table:
+    :param database:
+    :param host:
+    :param username:
+    :param password:
+    :param port:
+    :param debug:
+    :return:
+    """
+    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+    spatial_table_list = get_list_of_spatial_tables_in_db(database, **config)
+
+    if table in spatial_table_list:
+        return True
+    else:
+        return False
+
+
 ################################################################################
 # QUERY THE DATABASE AND RETURN AS DATAFRAME
 ################################################################################
