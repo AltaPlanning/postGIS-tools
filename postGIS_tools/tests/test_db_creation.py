@@ -6,14 +6,16 @@ from postGIS_tools.configurations import get_postGIS_config
 if __name__ == "__main__":
 
     user_config, super_user_config = get_postGIS_config()
+    local_config = super_user_config["localhost"]
+    do_config = super_user_config["do_projects"]
 
     DATABASE = "test_db"
 
-    # Make a local database
-    local_config = super_user_config["localhost"]
-    pGIS.make_new_database(DATABASE, debug=True, **local_config)
+    for config in [local_config, do_config]:
 
-    # Make a database on the D.O. cloud
-    do_config = super_user_config["digitalocean"]
-    print(super_user_config)
-    pGIS.make_new_database(DATABASE, debug=True, **do_config)
+        # Make a new database
+        pGIS.make_new_database(DATABASE, **config)
+
+        # Confirm it exists
+        if not pGIS.database_exists(DATABASE, **config):
+            print(f"ERROR CREATING {DATABASE} AT {config}")
