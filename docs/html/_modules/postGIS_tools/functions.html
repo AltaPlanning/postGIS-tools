@@ -147,21 +147,21 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 
 <span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">sqlalchemy</span>
-<span class="kn">from</span> <span class="nn">geoalchemy2</span> <span class="k">import</span> <span class="n">Geometry</span><span class="p">,</span> <span class="n">WKTElement</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2</span> <span class="kn">import</span> <span class="n">Geometry</span><span class="p">,</span> <span class="n">WKTElement</span>
 
 
-<span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="k">import</span> <span class="n">THIS_SYSTEM</span>
-<span class="kn">from</span> <span class="nn">postGIS_tools.queries.hexagon_grid</span> <span class="k">import</span> <span class="n">hex_grid_function</span>
-<span class="kn">from</span> <span class="nn">postGIS_tools.logs</span> <span class="k">import</span> <span class="n">log_activity</span>
-<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="k">import</span> <span class="n">PG_PASSWORD</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="kn">import</span> <span class="n">THIS_SYSTEM</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.queries.hexagon_grid</span> <span class="kn">import</span> <span class="n">hex_grid_function</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.logs</span> <span class="kn">import</span> <span class="n">log_activity</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="kn">import</span> <span class="n">PG_PASSWORD</span>
 
 <span class="c1">################################################################################</span>
 <span class="c1"># CONNECT TO THE DATABASE</span>
@@ -190,10 +190,10 @@
 <span class="sd">    :return: `psycopg2.connect()` or `sqlalcehmy.create_engine()` object to be used for database I/O operations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Using </span><span class="si">{method}</span><span class="s2"> to connect to:</span><span class="se">\n\t</span><span class="si">{uri}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{method}</span><span class="s2"> to connect to:</span><span class="se">\n\t</span><span class="si">{uri}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;sqlalchemy&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -371,6 +371,103 @@
 
     <span class="k">return</span> <span class="n">spatial_table_names</span></div>
 
+
+<div class="viewcode-block" id="get_database_list"><a class="viewcode-back" href="../../postGIS_tools.functions.html#postGIS_tools.functions.get_database_list">[docs]</a><span class="k">def</span> <span class="nf">get_database_list</span><span class="p">(</span>
+        <span class="n">default_db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;postgres&quot;</span><span class="p">,</span>
+        <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PG_PASSWORD</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO docstring</span>
+
+<span class="sd">    :param host:</span>
+<span class="sd">    :param username:</span>
+<span class="sd">    :param password:</span>
+<span class="sd">    :param port:</span>
+<span class="sd">    :param debug:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+
+    <span class="c1"># Get a list of databases that aren&#39;t &#39;postgres&#39;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; SELECT datname FROM pg_database </span>
+<span class="s2">            WHERE datistemplate = false</span>
+<span class="s2">                AND datname != &#39;postgres&#39;; &quot;&quot;&quot;</span>
+
+    <span class="c1"># Run this query from within the &#39;postgres&#39; db</span>
+    <span class="n">query_result</span> <span class="o">=</span> <span class="n">fetch_things_from_database</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">default_db</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">db_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">query_result</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">db_list</span></div>
+
+<span class="c1">################################################################################</span>
+<span class="c1"># TEST THAT THINGS EXIST</span>
+<span class="c1">################################################################################</span>
+
+
+<div class="viewcode-block" id="database_exists"><a class="viewcode-back" href="../../postGIS_tools.functions.html#postGIS_tools.functions.database_exists">[docs]</a><span class="k">def</span> <span class="nf">database_exists</span><span class="p">(</span>
+        <span class="n">database</span><span class="p">,</span>
+        <span class="n">default_db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;postgres&quot;</span><span class="p">,</span>
+        <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="n">PG_PASSWORD</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO docstring</span>
+
+<span class="sd">    :param database:</span>
+<span class="sd">    :param host:</span>
+<span class="sd">    :param username:</span>
+<span class="sd">    :param password:</span>
+<span class="sd">    :param port:</span>
+<span class="sd">    :param debug:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;default_db&quot;</span><span class="p">:</span> <span class="n">default_db</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+    <span class="n">db_list</span> <span class="o">=</span> <span class="n">get_database_list</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">database</span> <span class="ow">in</span> <span class="n">db_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="spatial_table_exists"><a class="viewcode-back" href="../../postGIS_tools.functions.html#postGIS_tools.functions.spatial_table_exists">[docs]</a><span class="k">def</span> <span class="nf">spatial_table_exists</span><span class="p">(</span>
+        <span class="n">table</span><span class="p">,</span>
+        <span class="n">database</span><span class="p">,</span>
+        <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="n">PG_PASSWORD</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO docstring</span>
+
+<span class="sd">    :param table:</span>
+<span class="sd">    :param database:</span>
+<span class="sd">    :param host:</span>
+<span class="sd">    :param username:</span>
+<span class="sd">    :param password:</span>
+<span class="sd">    :param port:</span>
+<span class="sd">    :param debug:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+    <span class="n">spatial_table_list</span> <span class="o">=</span> <span class="n">get_list_of_spatial_tables_in_db</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">spatial_table_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
 <span class="c1">################################################################################</span>
 <span class="c1"># QUERY THE DATABASE AND RETURN AS DATAFRAME</span>
 <span class="c1">################################################################################</span>
@@ -501,7 +598,7 @@
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
         <span class="n">runtime</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> COMMITTED IN - </span><span class="si">{runtime}</span><span class="s1"> seconds&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> COMMITTED IN - </span><span class="si">{runtime}</span><span class="s1"> seconds&#39;</span><span class="p">)</span>
 
     <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.execute_query&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
@@ -537,9 +634,9 @@
     <span class="n">col_exists</span> <span class="o">=</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">existing_cols</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">col_exists</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;&#39;&#39;ALTER TABLE </span><span class="si">{tbl}</span><span class="s1"> ADD COLUMN </span><span class="si">{column}</span><span class="s1"> </span><span class="si">{data_type}</span><span class="s1">;&#39;&#39;&#39;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;ALTER TABLE </span><span class="si">{tbl}</span><span class="s1"> ADD COLUMN </span><span class="si">{column}</span><span class="s1"> </span><span class="si">{data_type}</span><span class="s1">;&#39;&#39;&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot; UPDATE </span><span class="si">{tbl}</span><span class="s2"> SET </span><span class="si">{column}</span><span class="s2"> = NULL  &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot; UPDATE </span><span class="si">{tbl}</span><span class="s2"> SET </span><span class="si">{column}</span><span class="s2"> = NULL  &quot;&quot;&quot;</span>
 
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
@@ -569,7 +666,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
-    <span class="n">drop_table_query</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;DROP TABLE </span><span class="si">{tablename}</span><span class="s1"> CASCADE;&#39;</span>
+    <span class="n">drop_table_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE </span><span class="si">{tablename}</span><span class="s1"> CASCADE;&#39;</span>
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">drop_table_query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.drop_table&quot;</span><span class="p">,</span> <span class="n">drop_table_query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
@@ -606,7 +703,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
-    <span class="n">qry</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;&#39;&#39;ALTER TABLE </span><span class="si">{tablename}</span><span class="s1"></span>
+    <span class="n">qry</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;ALTER TABLE </span><span class="si">{tablename}</span><span class="s1"></span>
 <span class="s1">              ALTER COLUMN geom TYPE geometry(</span><span class="si">{geom_type}</span><span class="s1">, </span><span class="si">{new_epsg}</span><span class="s1">) </span>
 <span class="s1">              USING ST_Transform( ST_SetSRID( geom, </span><span class="si">{orig_epsg}</span><span class="s1"> ), </span><span class="si">{new_epsg}</span><span class="s1"> ); &#39;&#39;&#39;</span>
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">qry</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
@@ -640,11 +737,11 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="c1"># Add a primary key column named &#39;unique_id&#39;</span>
-    <span class="n">unique_id_query</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;ALTER TABLE </span><span class="si">{spatial_table_name}</span><span class="s1"> ADD unique_id serial PRIMARY KEY;&#39;</span>
+    <span class="n">unique_id_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ALTER TABLE </span><span class="si">{spatial_table_name}</span><span class="s1"> ADD unique_id serial PRIMARY KEY;&#39;</span>
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">unique_id_query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># Create a spatial index on the &#39;geom&#39; column</span>
-    <span class="n">spatial_index_query</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;CREATE INDEX gix_</span><span class="si">{spatial_table_name}</span><span class="s1"> ON </span><span class="si">{spatial_table_name}</span><span class="s1"> USING GIST (geom);&#39;</span>
+    <span class="n">spatial_index_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;CREATE INDEX gix_</span><span class="si">{spatial_table_name}</span><span class="s1"> ON </span><span class="si">{spatial_table_name}</span><span class="s1"> USING GIST (geom);&#39;</span>
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">spatial_index_query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.prep_spatial_table&quot;</span><span class="p">,</span>
@@ -683,7 +780,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
-    <span class="n">query</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;&#39;&#39; ALTER TABLE </span><span class="si">{spatial_table}</span><span class="s1"></span>
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39; ALTER TABLE </span><span class="si">{spatial_table}</span><span class="s1"></span>
 <span class="s1">                 ALTER COLUMN geom TYPE geometry(</span><span class="si">{geom_type}</span><span class="s1">, </span><span class="si">{epsg}</span><span class="s1">) </span>
 <span class="s1">                                        USING ST_SetSRID(geom, </span><span class="si">{epsg}</span><span class="s1">)&#39;&#39;&#39;</span>
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
@@ -723,16 +820,16 @@
     <span class="c1"># Confirm that the geom type is valid</span>
     <span class="n">valid_geom_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POINT&quot;</span><span class="p">,</span> <span class="s2">&quot;MULTIPOINT&quot;</span><span class="p">,</span> <span class="s2">&quot;POLYGON&quot;</span><span class="p">,</span> <span class="s2">&quot;MULTIPOLYGON&quot;</span><span class="p">,</span> <span class="s2">&quot;LINESTRING&quot;</span><span class="p">,</span> <span class="s2">&quot;MULTILINESTRING&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">geom_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_geom_types</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Geometry type of </span><span class="si">{geom_type}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Please use one of the following: </span><span class="si">{valid_geom_types}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Geometry type of </span><span class="si">{geom_type}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please use one of the following: </span><span class="si">{valid_geom_types}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aborting&quot;</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;MAKING </span><span class="si">{new_tblname}</span><span class="s1"> FROM:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MAKING </span><span class="si">{new_tblname}</span><span class="s1"> FROM:&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
-    <span class="n">full_query</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">full_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        DROP TABLE IF EXISTS </span><span class="si">{new_tblname}</span><span class="s2">;</span>
 <span class="s2">        CREATE TABLE </span><span class="si">{new_tblname}</span><span class="s2"> AS</span>
 <span class="s2">        </span><span class="si">{query}</span><span class="s2"></span>
@@ -772,7 +869,7 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Loading the hex_grid() function into </span><span class="si">{database}</span><span class="s1"> on </span><span class="si">{host}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loading the hex_grid() function into </span><span class="si">{database}</span><span class="s1"> on </span><span class="si">{host}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">execute_query</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">hex_grid_function</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.load_hexgrid_function&quot;</span><span class="p">,</span> <span class="s2">&quot;see pGIS.queries.hexagon_grid.py&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
@@ -801,7 +898,7 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="c1"># check to see if this database already exists</span>
-    <span class="n">exists_qry</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot; SELECT EXISTS(</span>
+    <span class="n">exists_qry</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot; SELECT EXISTS(</span>
 <span class="s2">                        SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = lower(&#39;</span><span class="si">{database_name}</span><span class="s2">&#39;)</span>
 <span class="s2">                     );  &quot;&quot;&quot;</span>
 
@@ -811,9 +908,9 @@
 
     <span class="k">if</span> <span class="s1">&#39;False&#39;</span> <span class="ow">in</span> <span class="n">exists_result</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Make new database routine for: </span><span class="si">{database_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Make new database routine for: </span><span class="si">{database_name}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">make_db</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;CREATE DATABASE </span><span class="si">{database_name}</span><span class="s2">;&quot;</span>
+        <span class="n">make_db</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CREATE DATABASE </span><span class="si">{database_name}</span><span class="s2">;&quot;</span>
 
         <span class="n">c_postgres</span> <span class="o">=</span> <span class="n">make_database_connection</span><span class="p">(</span><span class="n">default_db</span><span class="p">,</span> <span class="s1">&#39;psycopg2&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
         <span class="n">c_postgres</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span><span class="p">)</span>
@@ -829,12 +926,12 @@
 
         <span class="c1"># Check if PostGIS already exists by default. If not, add it.</span>
         <span class="k">if</span> <span class="s1">&#39;geometry_columns&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_full_list_of_tables_in_db</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">):</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Adding postGIS extension to </span><span class="si">{database_name}</span><span class="s1">&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Adding postGIS extension to </span><span class="si">{database_name}</span><span class="s1">&#39;</span>
             <span class="n">execute_query</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="s1">&#39;CREATE EXTENSION postGIS;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
             <span class="n">log_activity</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.make_new_database&quot;</span><span class="p">,</span> <span class="s2">&quot;Added PostGIS&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;PostGIS exists by default in </span><span class="si">{database_name}</span><span class="s1">&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;PostGIS exists by default in </span><span class="si">{database_name}</span><span class="s1">&#39;</span>
             <span class="n">log_activity</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.make_new_database&quot;</span><span class="p">,</span> <span class="s2">&quot;PostGIS exists by default&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
@@ -845,7 +942,7 @@
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{database_name}</span><span class="s1"> already exists at </span><span class="si">{host}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{database_name}</span><span class="s1"> already exists at </span><span class="si">{host}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <span class="c1">################################################################################</span>
@@ -882,11 +979,11 @@
     <span class="n">path_list</span> <span class="o">=</span> <span class="n">sql_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">sql_file</span> <span class="o">=</span> <span class="n">path_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Loading </span><span class="si">{sql_file}</span><span class="s1"> to </span><span class="si">{database_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loading </span><span class="si">{sql_file}</span><span class="s1"> to </span><span class="si">{database_name}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">make_new_database</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
-    <span class="n">c</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;psql &quot;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">/</span><span class="si">{database_name}</span><span class="s1">&quot; &lt;  &quot;</span><span class="si">{sql_file_path}</span><span class="s1">&quot;&#39;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;psql &quot;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">/</span><span class="si">{database_name}</span><span class="s1">&quot; &lt;  &quot;</span><span class="si">{sql_file_path}</span><span class="s1">&quot;&#39;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -927,7 +1024,7 @@
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;WRITING </span><span class="si">{table_name}</span><span class="s1">//</span><span class="si">{db_name}</span><span class="s1">//</span><span class="si">{host}</span><span class="s1"> FROM DATAFRAME&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;WRITING </span><span class="si">{table_name}</span><span class="s1">//</span><span class="si">{db_name}</span><span class="s1">//</span><span class="si">{host}</span><span class="s1"> FROM DATAFRAME&#39;</span><span class="p">)</span>
 
     <span class="c1"># FORCE ALL COLUMN NAMES TO LOWER-CASE (pgSQL requirement)</span>
     <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
@@ -940,9 +1037,9 @@
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
         <span class="c1"># REPORT THE RUNTIME</span>
         <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;FINISHED IN </span><span class="si">{runtime}</span><span class="s1"> SECONDS&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;FINISHED IN </span><span class="si">{runtime}</span><span class="s1"> SECONDS&#39;</span><span class="p">)</span>
 
-    <span class="n">log_activity</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.dataframe_to_postgis&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Wrote pandas.DataFrame to </span><span class="si">{table_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
+    <span class="n">log_activity</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.dataframe_to_postgis&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Wrote pandas.DataFrame to </span><span class="si">{table_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="csv_to_postgis"><a class="viewcode-back" href="../../postGIS_tools.functions.html#postGIS_tools.functions.csv_to_postgis">[docs]</a><span class="k">def</span> <span class="nf">csv_to_postgis</span><span class="p">(</span>
@@ -973,13 +1070,13 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;READING </span><span class="si">{csv_filepath}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;READING </span><span class="si">{csv_filepath}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># Does this table already exist? In order to overwrite it you have to drop the existing table first</span>
     <span class="n">tables</span> <span class="o">=</span> <span class="n">get_list_of_tables_in_db</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{table_name}</span><span class="s1"> ALREADY EXISTS... DROPPING TABLE CASCADE&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{table_name}</span><span class="s1"> ALREADY EXISTS... DROPPING TABLE CASCADE&#39;</span><span class="p">)</span>
             <span class="n">drop_table</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -999,7 +1096,7 @@
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]:</span>
         <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-    <span class="n">log_activity</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.csv_to_postgis&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Loaded CSV from </span><span class="si">{csv_filepath}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">log_activity</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.csv_to_postgis&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Loaded CSV from </span><span class="si">{csv_filepath}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># Save dataframe to database</span>
     <span class="n">dataframe_to_postgis</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
@@ -1043,11 +1140,11 @@
     <span class="n">geom_typ</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">geom_types</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> PROCESSING </span><span class="se">\t</span><span class="s1"> </span><span class="si">{geom_typ}</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> </span><span class="si">{output_table_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> PROCESSING </span><span class="se">\t</span><span class="s1"> </span><span class="si">{geom_typ}</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> </span><span class="si">{output_table_name}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># Manually set the EPSG if the user passes one</span>
     <span class="k">if</span> <span class="n">src_epsg</span><span class="p">:</span>
-        <span class="n">geodataframe</span><span class="o">.</span><span class="n">crs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;init&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;epsg:</span><span class="si">{src_epsg}</span><span class="s2">&quot;</span><span class="p">}</span>
+        <span class="n">geodataframe</span><span class="o">.</span><span class="n">crs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;init&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;epsg:</span><span class="si">{src_epsg}</span><span class="s2">&quot;</span><span class="p">}</span>
         <span class="n">epsg_code</span> <span class="o">=</span> <span class="n">src_epsg</span>
 
     <span class="c1"># Otherwise, try to get the EPSG value directly from the geodataframe</span>
@@ -1085,7 +1182,7 @@
 
     <span class="c1"># write geodataframe to SQL database</span>
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> WRITING TO - </span><span class="si">{database}</span><span class="s1"> /// </span><span class="si">{host}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> WRITING TO - </span><span class="si">{database}</span><span class="s1"> /// </span><span class="si">{host}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">engine</span> <span class="o">=</span> <span class="n">make_database_connection</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s1">&#39;sqlalchemy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="n">geodataframe</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span>
@@ -1095,10 +1192,10 @@
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
         <span class="n">runtime</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> FINISHED IN </span><span class="si">{runtime}</span><span class="s1"> seconds&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> FINISHED IN </span><span class="si">{runtime}</span><span class="s1"> seconds&#39;</span><span class="p">)</span>
 
     <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.geodataframe_to_postgis&quot;</span><span class="p">,</span>
-                 <span class="n">f</span><span class="s2">&quot;Wrote geopandas.GeoDataFrame to </span><span class="si">{output_table_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+                 <span class="sa">f</span><span class="s2">&quot;Wrote geopandas.GeoDataFrame to </span><span class="si">{output_table_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># If provided an EPSG, alter whatever the native projection was to the output_epsg</span>
     <span class="k">if</span> <span class="n">output_epsg</span><span class="p">:</span>
@@ -1140,7 +1237,7 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;READING - </span><span class="si">{shp_path}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;READING - </span><span class="si">{shp_path}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># READ THE .SHP INTO A GEOPANDAS.GEODATAFRAME</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">shp_path</span><span class="p">)</span>
@@ -1155,7 +1252,7 @@
     <span class="n">df</span><span class="p">[</span><span class="s1">&#39;explode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
-    <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.shp_to_postgis&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Loaded .SHP from </span><span class="si">{shp_path}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.shp_to_postgis&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Loaded .SHP from </span><span class="si">{shp_path}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># SEND THE GEODATAFRAME TO POSTGIS</span>
     <span class="n">geodataframe_to_postgis</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">output_table_name</span><span class="p">,</span> <span class="n">src_epsg</span><span class="o">=</span><span class="n">src_epsg</span><span class="p">,</span> <span class="n">output_epsg</span><span class="o">=</span><span class="n">output_epsg</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
@@ -1191,7 +1288,7 @@
 <span class="sd">    :param debug: boolean to print messages to console</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">command</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;shp2pgsql -s </span><span class="si">{srid}</span><span class="s2"> -I </span><span class="si">{shp_path}</span><span class="s2"> </span><span class="si">{new_pg_name}</span><span class="s2"> | psql -U </span><span class="si">{username}</span><span class="s2"> -d </span><span class="si">{database}</span><span class="s2"> -h </span><span class="si">{host}</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;shp2pgsql -s </span><span class="si">{srid}</span><span class="s2"> -I </span><span class="si">{shp_path}</span><span class="s2"> </span><span class="si">{new_pg_name}</span><span class="s2"> | psql -U </span><span class="si">{username}</span><span class="s2"> -d </span><span class="si">{database}</span><span class="s2"> -h </span><span class="si">{host}</span><span class="s2">&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
 
 
@@ -1229,8 +1326,8 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Creating shapefile from </span><span class="si">{table_name}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">query_geo_table</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;SELECT * FROM </span><span class="si">{table_name}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">geom_col</span><span class="o">=</span><span class="n">geom_col</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating shapefile from </span><span class="si">{table_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">query_geo_table</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;SELECT * FROM </span><span class="si">{table_name}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">geom_col</span><span class="o">=</span><span class="n">geom_col</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
         <span class="c1"># Convert any boolean column types to strings</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
@@ -1238,10 +1335,10 @@
             <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;bool&#39;</span><span class="p">:</span>
                 <span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
-        <span class="n">out_shp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{table_name}</span><span class="s1">.shp&#39;</span><span class="p">)</span>
+        <span class="n">out_shp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{table_name}</span><span class="s1">.shp&#39;</span><span class="p">)</span>
         <span class="n">df</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">out_shp</span><span class="p">)</span>
 
-        <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.postgis_to_shp&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Saved .SHP from </span><span class="si">{table_name}</span><span class="s2"> to </span><span class="si">{out_shp}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">log_activity</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="s2">&quot;pGIS.postgis_to_shp&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Saved .SHP from </span><span class="si">{table_name}</span><span class="s2"> to </span><span class="si">{out_shp}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">except</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
@@ -1271,12 +1368,12 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="c1"># put everything into a subfolder. Make it if it doesn&#39;t exist</span>
-    <span class="n">dump_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;shps_from_pgdb_</span><span class="si">{database_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">dump_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;shps_from_pgdb_</span><span class="si">{database_name}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dump_folder</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dump_folder</span><span class="p">)</span>
 
     <span class="n">log_activity</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="s2">&quot;pGIS.dump_all_spatial_tables_to_shapefiles&quot;</span><span class="p">,</span>
-                 <span class="n">f</span><span class="s2">&quot;Saving all spatial tables to SHP in </span><span class="si">{dump_folder}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+                 <span class="sa">f</span><span class="s2">&quot;Saving all spatial tables to SHP in </span><span class="si">{dump_folder}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># Get a list of all spatial tables and export each one</span>
     <span class="n">spatial_tables</span> <span class="o">=</span> <span class="n">get_list_of_spatial_tables_in_db</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
@@ -1312,23 +1409,23 @@
     <span class="n">today</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
     <span class="c1"># USE PG_DUMP VIA COMMAND LINE TO SAVE A .SQL FILE</span>
-    <span class="n">sql_file</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{db_to_backup}</span><span class="s1">_</span><span class="si">{today}</span><span class="s1">.sql&#39;</span>
+    <span class="n">sql_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{db_to_backup}</span><span class="s1">_</span><span class="si">{today}</span><span class="s1">.sql&#39;</span>
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Using pg_dump to back up </span><span class="si">{db_to_backup}</span><span class="s1"> to </span><span class="si">{sql_file}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using pg_dump to back up </span><span class="si">{db_to_backup}</span><span class="s1"> to </span><span class="si">{sql_file}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
     <span class="n">log_activity</span><span class="p">(</span><span class="n">db_to_backup</span><span class="p">,</span> <span class="s1">&#39;pGIS.dump_database_to_sql_file&#39;</span><span class="p">,</span>
-                 <span class="n">f</span><span class="s2">&quot;Using pg_dump to create </span><span class="si">{sql_file}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+                 <span class="sa">f</span><span class="s2">&quot;Using pg_dump to create </span><span class="si">{sql_file}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">THIS_SYSTEM</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span><span class="p">:</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot; export PGPASSWORD=</span><span class="si">{password}</span><span class="s2"></span>
+        <span class="n">c</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot; export PGPASSWORD=</span><span class="si">{password}</span><span class="s2"></span>
 <span class="s2">                 cd &quot;</span><span class="si">{backup_folder}</span><span class="s2">&quot;</span>
 <span class="s2">                 pg_dump -U postgres -h </span><span class="si">{host}</span><span class="s2"> </span><span class="si">{db_to_backup}</span><span class="s2"> &gt; </span><span class="si">{sql_file}</span><span class="s2"> &quot;&quot;&quot;</span>
 
     <span class="k">elif</span> <span class="n">THIS_SYSTEM</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
         <span class="n">bkp_drive</span> <span class="o">=</span> <span class="n">backup_folder</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
 
-        <span class="n">c</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot; set PGPASSWORD=</span><span class="si">{password}</span><span class="s2"></span>
+        <span class="n">c</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot; set PGPASSWORD=</span><span class="si">{password}</span><span class="s2"></span>
 <span class="s2">                 </span><span class="si">{bkp_drive}</span><span class="s2"></span>
 <span class="s2">                 cd &quot;</span><span class="si">{backup_folder}</span><span class="s2">&quot;</span>
 <span class="s2">                 pg_dump -U postgres -h </span><span class="si">{host}</span><span class="s2"> </span><span class="si">{db_to_backup}</span><span class="s2"> &gt; </span><span class="si">{sql_file}</span><span class="s2"> &quot;&quot;&quot;</span>

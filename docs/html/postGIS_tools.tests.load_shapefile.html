@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>postGIS_tools.queries.hexagon_grid module &mdash; postGIS_tools 1.2.0 documentation</title>
+  <title>postGIS_tools.tests.load_shapefile module &mdash; postGIS_tools 1.2.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="postGIS_tools.routines package" href="postGIS_tools.routines.html" />
-    <link rel="prev" title="postGIS_tools.queries package" href="postGIS_tools.queries.html" /> 
+    <link rel="next" title="postGIS_tools.tests.test_db_creation module" href="postGIS_tools.tests.test_db_creation.html" />
+    <link rel="prev" title="postGIS_tools.tests package" href="postGIS_tools.tests.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,9 +86,9 @@
 <li class="toctree-l2 current"><a class="reference internal" href="postGIS_tools.html">postGIS_tools package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="postGIS_tools.html#overview">Overview</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="postGIS_tools.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="postGIS_tools.queries.html">postGIS_tools.queries package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.queries.html">postGIS_tools.queries package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="postGIS_tools.routines.html">postGIS_tools.routines package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.tests.html">postGIS_tools.tests package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="postGIS_tools.tests.html">postGIS_tools.tests package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="postGIS_tools.html#submodules">Submodules</a></li>
@@ -145,15 +145,15 @@
         
           <li><a href="postGIS_tools.html">postGIS_tools package</a> &raquo;</li>
         
-          <li><a href="postGIS_tools.queries.html">postGIS_tools.queries package</a> &raquo;</li>
+          <li><a href="postGIS_tools.tests.html">postGIS_tools.tests package</a> &raquo;</li>
         
-      <li>postGIS_tools.queries.hexagon_grid module</li>
+      <li>postGIS_tools.tests.load_shapefile module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/postGIS_tools.queries.hexagon_grid.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/postGIS_tools.tests.load_shapefile.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,32 +166,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-postGIS_tools.queries.hexagon_grid">
-<span id="postgis-tools-queries-hexagon-grid-module"></span><h1>postGIS_tools.queries.hexagon_grid module<a class="headerlink" href="#module-postGIS_tools.queries.hexagon_grid" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="summary-of-hexagon-grid-py">
-<h2>Summary of <code class="docutils literal notranslate"><span class="pre">hexagon_grid.py</span></code><a class="headerlink" href="#summary-of-hexagon-grid-py" title="Permalink to this headline">¶</a></h2>
-<p>Text-based definition of a SQL function to create a hexagon grid overlay</p>
-<dl class="function">
-<dt id="postGIS_tools.queries.hexagon_grid.sql_to_make_hex_grid">
-<code class="sig-prename descclassname">postGIS_tools.queries.hexagon_grid.</code><code class="sig-name descname">sql_to_make_hex_grid</code><span class="sig-paren">(</span><em class="sig-param">extent_table: str</em>, <em class="sig-param">epsg: int</em>, <em class="sig-param">output_table_name: str</em>, <em class="sig-param">size: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/queries/hexagon_grid.html#sql_to_make_hex_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.queries.hexagon_grid.sql_to_make_hex_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns a string with a valid SQL query that creates
-a hexagon layer covering the input {extent_table}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>extent_table</strong> – ‘name_of_table_to_cover’</p></li>
-<li><p><strong>epsg</strong> – integer for EPSG you want the hexagons to be in</p></li>
-<li><p><strong>output_table_name</strong> – ‘hexagon_layer’</p></li>
-<li><p><strong>size</strong> – float value, 1 = 1 square KM</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>string, valid SQL query</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
+  <div class="section" id="module-postGIS_tools.tests.load_shapefile">
+<span id="postgis-tools-tests-load-shapefile-module"></span><h1>postGIS_tools.tests.load_shapefile module<a class="headerlink" href="#module-postGIS_tools.tests.load_shapefile" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -202,10 +178,10 @@ a hexagon layer covering the input {extent_table}.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="postGIS_tools.routines.html" class="btn btn-neutral float-right" title="postGIS_tools.routines package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="postGIS_tools.tests.test_db_creation.html" class="btn btn-neutral float-right" title="postGIS_tools.tests.test_db_creation module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="postGIS_tools.queries.html" class="btn btn-neutral float-left" title="postGIS_tools.queries package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="postGIS_tools.tests.html" class="btn btn-neutral float-left" title="postGIS_tools.tests package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
