@@ -183,7 +183,7 @@ by creating a local <code class="docutils literal notranslate"><span class="pre"
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="k">import</span> <span class="n">get_postGIS_config</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="kn">import</span> <span class="n">get_postGIS_config</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_postGIS_config</span><span class="p">()</span>
 <span class="go">- @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ - - @ -</span>
 <span class="go">LOADING postGIS CONFIGURATIONS FROM /Users/aaron/Documents/pGIS-configurations/config.txt</span>
@@ -202,7 +202,7 @@ by creating a local <code class="docutils literal notranslate"><span class="pre"
 </div>
 <dl class="function">
 <dt id="postGIS_tools.configurations.get_postGIS_config">
-<code class="sig-prename descclassname">postGIS_tools.configurations.</code><code class="sig-name descname">get_postGIS_config</code><span class="sig-paren">(</span><em class="sig-param">custom_config_file: Union[bool</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">verbose: bool = True</em><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/postGIS_tools/configurations.html#get_postGIS_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.configurations.get_postGIS_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">postGIS_tools.configurations.</code><code class="sig-name descname">get_postGIS_config</code><span class="sig-paren">(</span><em class="sig-param">custom_config_file: Union[bool</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/postGIS_tools/configurations.html#get_postGIS_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.configurations.get_postGIS_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a config.txt file and return a tuple wiht dictionaries for each postGIS configuration defined,
 Simple CONFIG is keyed on host, username, password, and port.
 CONFIG_FULL also has keys for super_user and default_db</p>

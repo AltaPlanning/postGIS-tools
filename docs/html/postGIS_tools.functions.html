@@ -212,6 +212,27 @@ Accomplished by importing to a <code class="docutils literal notranslate"><span 
 </dd></dl>
 
 <dl class="function">
+<dt id="postGIS_tools.functions.database_exists">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">database_exists</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">default_db: str = 'postgres'</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#database_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.database_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO docstring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – </p></li>
+<li><p><strong>host</strong> – </p></li>
+<li><p><strong>username</strong> – </p></li>
+<li><p><strong>password</strong> – </p></li>
+<li><p><strong>port</strong> – </p></li>
+<li><p><strong>debug</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="postGIS_tools.functions.dataframe_to_postgis">
 <code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">dataframe_to_postgis</code><span class="sig-paren">(</span><em class="sig-param">db_name: str</em>, <em class="sig-param">dataframe: pandas.core.frame.DataFrame</em>, <em class="sig-param">table_name: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#dataframe_to_postgis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.dataframe_to_postgis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to a PostgreSQL database.</p>
@@ -364,6 +385,26 @@ Accomplished by importing to a <code class="docutils literal notranslate"><span 
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.get_database_list">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">get_database_list</code><span class="sig-paren">(</span><em class="sig-param">default_db: str = 'postgres'</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#get_database_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.get_database_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO docstring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> – </p></li>
+<li><p><strong>username</strong> – </p></li>
+<li><p><strong>password</strong> – </p></li>
+<li><p><strong>port</strong> – </p></li>
+<li><p><strong>debug</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
 </dd>
 </dl>
 </dd></dl>
@@ -753,6 +794,28 @@ TODO: type hints and params</p>
 <li><p><strong>password</strong> – password for the supplied username (string). eg: ‘mypassword123’</p></li>
 <li><p><strong>port</strong> – port number for the PgSQL database. eg: 5432</p></li>
 <li><p><strong>debug</strong> – boolean to print messages to console</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.functions.spatial_table_exists">
+<code class="sig-prename descclassname">postGIS_tools.functions.</code><code class="sig-name descname">spatial_table_exists</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">database</em>, <em class="sig-param">host='localhost'</em>, <em class="sig-param">username='postgres'</em>, <em class="sig-param">password='this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/functions.html#spatial_table_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.functions.spatial_table_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO docstring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> – </p></li>
+<li><p><strong>database</strong> – </p></li>
+<li><p><strong>host</strong> – </p></li>
+<li><p><strong>username</strong> – </p></li>
+<li><p><strong>password</strong> – </p></li>
+<li><p><strong>port</strong> – </p></li>
+<li><p><strong>debug</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

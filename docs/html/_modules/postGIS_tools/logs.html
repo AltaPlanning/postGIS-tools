@@ -164,12 +164,12 @@
 <span class="sd">                        &#39;2019-11-23 09:00:26 PST&#39;, &#39;Darwin&#39;, &#39;Aaron-MBP.local&#39;);</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">pytz</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">import</span> <span class="nn">psycopg2</span>
 
-<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="k">import</span> <span class="n">PG_PASSWORD</span>
-<span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="k">import</span> <span class="n">THIS_SYSTEM</span><span class="p">,</span> <span class="n">THIS_USER</span><span class="p">,</span> <span class="n">THIS_COMPUTER</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="kn">import</span> <span class="n">PG_PASSWORD</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="kn">import</span> <span class="n">THIS_SYSTEM</span><span class="p">,</span> <span class="n">THIS_USER</span><span class="p">,</span> <span class="n">THIS_COMPUTER</span>
 
 
 <span class="k">def</span> <span class="nf">_make_log_table</span><span class="p">(</span>
@@ -191,7 +191,7 @@
 <span class="sd">    :param debug: boolean to print messages to console</span>
 <span class="sd">    :return: creates ``db_history`` table within specified database</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">query_to_make_table</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">query_to_make_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        CREATE TABLE db_history (</span>
 <span class="s2">            uid SERIAL PRIMARY KEY,</span>
 <span class="s2">            username VARCHAR(255),</span>
@@ -202,10 +202,10 @@
 <span class="s2">            user_cpu VARCHAR(255)</span>
 <span class="s2">        )</span>
 <span class="s2">    &quot;&quot;&quot;</span>
-    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Making db_history log table within </span><span class="si">{uri}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Making db_history log table within </span><span class="si">{uri}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -244,7 +244,7 @@
 
     <span class="n">exists_query</span> <span class="o">=</span> <span class="s2">&quot;SELECT table_name FROM information_schema.tables WHERE table_schema = &#39;public&#39;&quot;</span>
 
-    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">exists_query</span><span class="p">)</span>
@@ -293,7 +293,7 @@
 <span class="sd">    :param debug: boolean to print messages to console</span>
 <span class="sd">    :return: inserts a new row into the ``db_history`` table</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">uri</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;postgresql://</span><span class="si">{username}</span><span class="s1">:</span><span class="si">{password}</span><span class="s1">@</span><span class="si">{host}</span><span class="s1">:</span><span class="si">{port}</span><span class="s1">/</span><span class="si">{db_name}</span><span class="s1">&#39;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="c1"># Create the db_history log table if it doesn&#39;t exist yet</span>
@@ -308,7 +308,7 @@
     <span class="n">query_text</span> <span class="o">=</span> <span class="n">query_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span>
 
     <span class="c1"># Insert the values as a new row</span>
-    <span class="n">insert_query</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">insert_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        INSERT INTO db_history (username, function_name, query_text, update_time, user_os, user_cpu)</span>
 <span class="s2">            VALUES (&#39;</span><span class="si">{THIS_USER}</span><span class="s2">&#39;, &#39;</span><span class="si">{function_name}</span><span class="s2">&#39;, &#39;</span><span class="si">{query_text}</span><span class="s2">&#39;, </span>
 <span class="s2">                    &#39;</span><span class="si">{right_now}</span><span class="s2">&#39;, &#39;</span><span class="si">{THIS_SYSTEM}</span><span class="s2">&#39;, &#39;</span><span class="si">{THIS_COMPUTER}</span><span class="s2">&#39;);</span>

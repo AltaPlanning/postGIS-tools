@@ -82,19 +82,18 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">postGIS_tools package</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="modules.html#overview">Overview</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.queries.html">postGIS_tools.queries package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="postGIS_tools.routines.html">postGIS_tools.routines package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.routines.html#overview-of-postgis-routines">Overview of <code class="docutils literal notranslate"><span class="pre">postGIS.routines</span></code></a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="postGIS_tools.routines.html#submodules">Submodules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">postGIS-tools</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="postGIS_tools.html">postGIS_tools package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="postGIS_tools.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.queries.html">postGIS_tools.queries package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="postGIS_tools.routines.html">postGIS_tools.routines package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="postGIS_tools.tests.html">postGIS_tools.tests package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.tests.html">postGIS_tools.tests package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="postGIS_tools.html#submodules">Submodules</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#submodules">Submodules</a></li>
 </ul>
 </li>
 </ul>
@@ -142,7 +141,9 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-          <li><a href="modules.html">postGIS_tools package</a> &raquo;</li>
+          <li><a href="modules.html">postGIS-tools</a> &raquo;</li>
+        
+          <li><a href="postGIS_tools.html">postGIS_tools package</a> &raquo;</li>
         
           <li><a href="postGIS_tools.routines.html">postGIS_tools.routines package</a> &raquo;</li>
         
@@ -168,6 +169,15 @@
   <div class="section" id="module-postGIS_tools.routines.back_up_entire_machine">
 <span id="postgis-tools-routines-back-up-entire-machine-module"></span><h1>postGIS_tools.routines.back_up_entire_machine module<a class="headerlink" href="#module-postGIS_tools.routines.back_up_entire_machine" title="Permalink to this headline">¶</a></h1>
 <p>TODO: docstrings all across file</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="kn">import</span> <span class="n">get_postGIS_config</span><span class="p">,</span> <span class="n">USER_DESKTOP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_postGIS_config</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">][</span><span class="s2">&quot;debug&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">back_up_all_databases</span><span class="p">(</span><span class="n">USER_DESKTOP</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">remove_all_databases</span><span class="p">(</span><span class="n">databases_to_keep</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;aaron&quot;</span><span class="p">,</span> <span class="s2">&quot;postgres&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
 <dl class="function">
 <dt id="postGIS_tools.routines.back_up_entire_machine.back_up_all_databases">
 <code class="sig-prename descclassname">postGIS_tools.routines.back_up_entire_machine.</code><code class="sig-name descname">back_up_all_databases</code><span class="sig-paren">(</span><em class="sig-param">backup_folder: str</em>, <em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/routines/back_up_entire_machine.html#back_up_all_databases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.routines.back_up_entire_machine.back_up_all_databases" title="Permalink to this definition">¶</a></dt>
@@ -175,16 +185,12 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="postGIS_tools.routines.back_up_entire_machine.get_database_list">
-<code class="sig-prename descclassname">postGIS_tools.routines.back_up_entire_machine.</code><code class="sig-name descname">get_database_list</code><span class="sig-paren">(</span><em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/routines/back_up_entire_machine.html#get_database_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.routines.back_up_entire_machine.get_database_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="postGIS_tools.routines.back_up_entire_machine.remove_all_databases">
-<code class="sig-prename descclassname">postGIS_tools.routines.back_up_entire_machine.</code><code class="sig-name descname">remove_all_databases</code><span class="sig-paren">(</span><em class="sig-param">host: str = 'localhost'</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/routines/back_up_entire_machine.html#remove_all_databases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.routines.back_up_entire_machine.remove_all_databases" title="Permalink to this definition">¶</a></dt>
-<dd><p>DROP each non-postgres database. Proceed with caution</p>
+<code class="sig-prename descclassname">postGIS_tools.routines.back_up_entire_machine.</code><code class="sig-name descname">remove_all_databases</code><span class="sig-paren">(</span><em class="sig-param">databases_to_keep: list = ['postgres'], host: str = 'localhost', username: str = 'postgres', password: str = 'this-is-a-placeholder-password', port: int = 5432, debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/routines/back_up_entire_machine.html#remove_all_databases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.routines.back_up_entire_machine.remove_all_databases" title="Permalink to this definition">¶</a></dt>
+<dd><p>DROP each database that’s not in the list of databases_to_keep</p>
 </dd></dl>
 
+</div>
 </div>
 
 

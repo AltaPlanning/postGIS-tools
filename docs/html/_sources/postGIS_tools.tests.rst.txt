@@ -11,4 +11,5 @@ Submodules
 
 .. toctree::
 
+   postGIS_tools.tests.load_shapefile
    postGIS_tools.tests.test_db_creation

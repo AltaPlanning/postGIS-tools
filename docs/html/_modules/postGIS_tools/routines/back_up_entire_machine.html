@@ -147,36 +147,27 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">TODO: docstrings all across file</span>
 
+
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+
+<span class="sd">    &gt;&gt;&gt; from postGIS_tools.configurations import get_postGIS_config, USER_DESKTOP</span>
+<span class="sd">    &gt;&gt;&gt; config, _ = get_postGIS_config()</span>
+<span class="sd">    &gt;&gt;&gt; config[&quot;localhost&quot;][&quot;debug&quot;] = True</span>
+<span class="sd">    &gt;&gt;&gt; back_up_all_databases(USER_DESKTOP, **config[&quot;localhost&quot;])</span>
+<span class="sd">    &gt;&gt;&gt; remove_all_databases(databases_to_keep=[&quot;aaron&quot;, &quot;postgres&quot;], **config[&quot;localhost&quot;])</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">psycopg2</span>
-<span class="kn">from</span> <span class="nn">psycopg2.extensions</span> <span class="k">import</span> <span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span>
+<span class="kn">from</span> <span class="nn">psycopg2.extensions</span> <span class="kn">import</span> <span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span>
 
-<span class="kn">import</span> <span class="nn">postGIS_tools</span>
-<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="k">import</span> <span class="n">PG_PASSWORD</span>
+<span class="kn">import</span> <span class="nn">postGIS_tools</span> <span class="k">as</span> <span class="nn">pGIS</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="kn">import</span> <span class="n">PG_PASSWORD</span>
 
 
 
-<div class="viewcode-block" id="get_database_list"><a class="viewcode-back" href="../../../postGIS_tools.routines.back_up_entire_machine.html#postGIS_tools.routines.back_up_entire_machine.get_database_list">[docs]</a><span class="k">def</span> <span class="nf">get_database_list</span><span class="p">(</span>
-        <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
-        <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
-        <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PG_PASSWORD</span><span class="p">,</span>
-        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
-        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="p">):</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
-
-    <span class="c1"># Get a list of databases that aren&#39;t &#39;postgres&#39;</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; SELECT datname FROM pg_database </span>
-<span class="s2">            WHERE datistemplate = false</span>
-<span class="s2">                AND datname != &#39;postgres&#39;; &quot;&quot;&quot;</span>
-
-    <span class="c1"># Run this query from within the &#39;postgres&#39; db</span>
-    <span class="n">query_result</span> <span class="o">=</span> <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">fetch_things_from_database</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">db_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">query_result</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">db_list</span></div>
 
 
 <div class="viewcode-block" id="back_up_all_databases"><a class="viewcode-back" href="../../../postGIS_tools.routines.back_up_entire_machine.html#postGIS_tools.routines.back_up_entire_machine.back_up_all_databases">[docs]</a><span class="k">def</span> <span class="nf">back_up_all_databases</span><span class="p">(</span>
@@ -191,45 +182,46 @@
 
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">database</span> <span class="ow">in</span> <span class="n">get_database_list</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">):</span>
-        <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">dump_database_to_sql_file</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">backup_folder</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
+    <span class="k">for</span> <span class="n">database</span> <span class="ow">in</span> <span class="n">pGIS</span><span class="o">.</span><span class="n">get_database_list</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">):</span>
+        <span class="n">pGIS</span><span class="o">.</span><span class="n">dump_database_to_sql_file</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">backup_folder</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="remove_all_databases"><a class="viewcode-back" href="../../../postGIS_tools.routines.back_up_entire_machine.html#postGIS_tools.routines.back_up_entire_machine.remove_all_databases">[docs]</a><span class="k">def</span> <span class="nf">remove_all_databases</span><span class="p">(</span>
+        <span class="n">databases_to_keep</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;postgres&quot;</span><span class="p">],</span>
         <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
         <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
         <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PG_PASSWORD</span><span class="p">,</span>
         <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5432</span><span class="p">,</span>
         <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; DROP each non-postgres database. Proceed with caution &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; DROP each database that&#39;s not in the list of databases_to_keep &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">db_name</span> <span class="ow">in</span> <span class="n">get_database_list</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">):</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;DROP DATABASE </span><span class="si">{db_name}</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">db_name</span> <span class="ow">in</span> <span class="n">pGIS</span><span class="o">.</span><span class="n">get_database_list</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">db_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">databases_to_keep</span><span class="p">:</span>
 
-        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        
-        <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
-                                      <span class="n">user</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
-                                      <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span>
-                                      <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;DROP DATABASE </span><span class="si">{db_name}</span><span class="s2">&quot;</span>
 
-        <span class="n">connection</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
-        <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+                                          <span class="n">user</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span><span class="p">,</span>
+                                          <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span>
+                                          <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+            <span class="n">connection</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span><span class="p">)</span>
+
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="k">import</span> <span class="n">get_postGIS_config</span><span class="p">,</span> <span class="n">USER_DESKTOP</span>
-    <span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_postGIS_config</span><span class="p">()</span>
-    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">][</span><span class="s2">&quot;debug&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="n">back_up_all_databases</span><span class="p">(</span><span class="n">USER_DESKTOP</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">])</span>
+    <span class="k">pass</span>
+    <span class="c1"># remove_all_databases([&quot;postgres&quot;, &quot;aaron&quot;])</span>
 </pre></div>
 
            </div>
