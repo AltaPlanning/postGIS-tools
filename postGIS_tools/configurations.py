@@ -131,4 +131,4 @@ def get_postGIS_config(
 
 
 if __name__ == "__main__":
-    get_postGIS_config()
+    get_postGIS_config(verbose=True)
