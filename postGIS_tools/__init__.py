@@ -13,4 +13,5 @@ All functions in the sub-modules are available with the following import:
 """
 from postGIS_tools.functions import *
 from postGIS_tools.configurations import *
+from postGIS_tools.routines.copy_tables import *
 from postGIS_tools.logs import log_activity
