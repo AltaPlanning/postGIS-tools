@@ -17,9 +17,10 @@ Examples
     >>> copy_spatial_table('src_tbl_name', 'dest_tbl_name', 'localhost', 'src_db', '192.168.1.14', 'dest_db')
 
 """
+from typing import Union
+
 import postGIS_tools
 from postGIS_tools.constants import PG_PASSWORD
-
 
 
 def copy_spatial_table(
@@ -36,6 +37,9 @@ def copy_spatial_table(
         debug: bool = False
 ):
     """
+    NOTE: THIS IS DEPRECATED, USE transfer_spatial_table() INSTEAD
+    BEING KEPT IN CODEBASE TEMPORARILY FOR SOME BACKWARD-COMPATIBILITY
+
     Copy a spatial table from one db/host to another table/db/host.
     If an ESPG is passed, this will also reproject the geom column for you.
 
@@ -64,6 +68,48 @@ def copy_spatial_table(
 
     # Write the geodataframe to database with dest_config
     postGIS_tools.functions.geodataframe_to_postgis(destination_db, gdf, destination_table_name, output_epsg=epsg, **dest_config)
+
+
+def transfer_spatial_table(
+        source_table_name: str,
+        source_database: str,
+        destination_table_name: str,
+        destination_database: str,
+        source_config: dict,
+        destination_config: dict,
+        epsg: Union[bool, int] = None,
+        debug: bool = True
+):
+    """
+    Copy a spatial table from one db/host to another table/db/host.
+    If an ESPG is passed, this will also reproject the geom column for you.
+
+    TODO: type hints and params, docstrings
+
+    :param source_table_name: 'name_of_source_spatial_table'
+    :param destination_table_name: 'name_of_new_copy'
+    :param source_host: '192.168.1.14'
+    :param source_db: 'my_source_database'
+    :param destination_host: 'localhost'
+    :param destination_db: 'my_destination_database'
+    :param epsg: None is default, but could be an int like: 2227
+    :return: nothing, but creates a copy of the source table
+    """
+
+    if debug:
+        print(f'## COPYING FROM {source_table_name} in {source_config}')
+        print(f"## \t TO {destination_table_name} in {destination_config}")
+
+    source_config['debug'] = debug
+    destination_config['debug'] = debug
+
+    # Get a geodataframe with the source_config
+    gdf = postGIS_tools.functions.query_geo_table(source_database, f'SELECT * FROM {source_table_name}',
+                                                  geom_col='geom', **source_config)
+
+    # Write the geodataframe to database with dest_config
+    postGIS_tools.functions.geodataframe_to_postgis(destination_database, gdf, destination_table_name,
+                                                    output_epsg=epsg, **destination_config)
 
 
 def copy_spatial_table_same_db(
@@ -115,3 +161,19 @@ def copy_spatial_table_same_host(
     config = {'password': password, 'username': username, 'debug': debug}
 
     copy_spatial_table(src_tbl, dest_tbl, host, src_database, host, dest_database, **config)
+
+
+if __name__ == "__main__":
+    config, _ = postGIS_tools.get_postGIS_config()
+    local_config = config["localhost"]
+    digital_ocean_config = config["digitalocean_projects"]
+
+    print(digital_ocean_config)
+
+    local_db = "aa_2019_216_mv_modal_2019_12_04"
+    do_db = "mountain_view_modal_2019_216"
+
+    postGIS_tools.make_new_database(do_db, default_db="defaultdb", debug=True, **digital_ocean_config)
+
+    for table in postGIS_tools.get_list_of_spatial_tables_in_db(local_db, **local_config):
+        transfer_spatial_table(table, local_db, table, do_db, local_config, digital_ocean_config)
