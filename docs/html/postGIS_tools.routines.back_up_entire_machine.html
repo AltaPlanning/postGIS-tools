@@ -171,7 +171,7 @@
 <p>TODO: docstrings all across file</p>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="kn">import</span> <span class="n">get_postGIS_config</span><span class="p">,</span> <span class="n">USER_DESKTOP</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">postGIS_tools.configurations</span> <span class="k">import</span> <span class="n">get_postGIS_config</span><span class="p">,</span> <span class="n">USER_DESKTOP</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_postGIS_config</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">][</span><span class="s2">&quot;debug&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">back_up_all_databases</span><span class="p">(</span><span class="n">USER_DESKTOP</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">])</span>

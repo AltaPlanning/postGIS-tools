@@ -189,7 +189,9 @@
 <dl class="function">
 <dt id="postGIS_tools.routines.copy_tables.copy_spatial_table">
 <code class="sig-prename descclassname">postGIS_tools.routines.copy_tables.</code><code class="sig-name descname">copy_spatial_table</code><span class="sig-paren">(</span><em class="sig-param">source_table_name</em>, <em class="sig-param">destination_table_name</em>, <em class="sig-param">source_host</em>, <em class="sig-param">source_db</em>, <em class="sig-param">destination_host</em>, <em class="sig-param">destination_db</em>, <em class="sig-param">epsg=None</em>, <em class="sig-param">username: str = 'postgres'</em>, <em class="sig-param">password: str = 'this-is-a-placeholder-password'</em>, <em class="sig-param">port: int = 5432</em>, <em class="sig-param">debug: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/routines/copy_tables.html#copy_spatial_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.routines.copy_tables.copy_spatial_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy a spatial table from one db/host to another table/db/host.
+<dd><p>NOTE: THIS IS DEPRECATED, USE transfer_spatial_table() INSTEAD
+BEING KEPT IN CODEBASE TEMPORARILY FOR SOME BACKWARD-COMPATIBILITY</p>
+<p>Copy a spatial table from one db/host to another table/db/host.
 If an ESPG is passed, this will also reproject the geom column for you.</p>
 <p>TODO: handle different passwords on different databases
 TODO: incorporate ports
@@ -247,6 +249,30 @@ TODO: type hints and params</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="postGIS_tools.routines.copy_tables.transfer_spatial_table">
+<code class="sig-prename descclassname">postGIS_tools.routines.copy_tables.</code><code class="sig-name descname">transfer_spatial_table</code><span class="sig-paren">(</span><em class="sig-param">source_table_name: str</em>, <em class="sig-param">source_database: str</em>, <em class="sig-param">destination_table_name: str</em>, <em class="sig-param">destination_database: str</em>, <em class="sig-param">source_config: dict</em>, <em class="sig-param">destination_config: dict</em>, <em class="sig-param">epsg: Union[bool</em>, <em class="sig-param">int] = None</em>, <em class="sig-param">debug: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/postGIS_tools/routines/copy_tables.html#transfer_spatial_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#postGIS_tools.routines.copy_tables.transfer_spatial_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a spatial table from one db/host to another table/db/host.
+If an ESPG is passed, this will also reproject the geom column for you.</p>
+<p>TODO: type hints and params, docstrings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_table_name</strong> – ‘name_of_source_spatial_table’</p></li>
+<li><p><strong>destination_table_name</strong> – ‘name_of_new_copy’</p></li>
+<li><p><strong>source_host</strong> – ‘192.168.1.14’</p></li>
+<li><p><strong>source_db</strong> – ‘my_source_database’</p></li>
+<li><p><strong>destination_host</strong> – ‘localhost’</p></li>
+<li><p><strong>destination_db</strong> – ‘my_destination_database’</p></li>
+<li><p><strong>epsg</strong> – None is default, but could be an int like: 2227</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nothing, but creates a copy of the source table</p>
 </dd>
 </dl>
 </dd></dl>

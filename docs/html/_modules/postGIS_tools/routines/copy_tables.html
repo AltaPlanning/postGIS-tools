@@ -163,9 +163,10 @@
 <span class="sd">    &gt;&gt;&gt; copy_spatial_table(&#39;src_tbl_name&#39;, &#39;dest_tbl_name&#39;, &#39;localhost&#39;, &#39;src_db&#39;, &#39;192.168.1.14&#39;, &#39;dest_db&#39;)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">postGIS_tools</span>
-<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="kn">import</span> <span class="n">PG_PASSWORD</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">postGIS_tools</span>
+<span class="kn">from</span> <span class="nn">postGIS_tools.constants</span> <span class="k">import</span> <span class="n">PG_PASSWORD</span>
 
 
 <div class="viewcode-block" id="copy_spatial_table"><a class="viewcode-back" href="../../../postGIS_tools.routines.copy_tables.html#postGIS_tools.routines.copy_tables.copy_spatial_table">[docs]</a><span class="k">def</span> <span class="nf">copy_spatial_table</span><span class="p">(</span>
@@ -182,6 +183,9 @@
         <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    NOTE: THIS IS DEPRECATED, USE transfer_spatial_table() INSTEAD</span>
+<span class="sd">    BEING KEPT IN CODEBASE TEMPORARILY FOR SOME BACKWARD-COMPATIBILITY</span>
+
 <span class="sd">    Copy a spatial table from one db/host to another table/db/host.</span>
 <span class="sd">    If an ESPG is passed, this will also reproject the geom column for you.</span>
 
@@ -200,16 +204,58 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;COPYING </span><span class="si">{source_table_name}</span><span class="s1"> in </span><span class="si">{source_db}</span><span class="s1"> @ </span><span class="si">{source_host}</span><span class="s1"> TO </span><span class="si">{destination_table_name}</span><span class="s1"> in </span><span class="si">{destination_db}</span><span class="s1"> @ </span><span class="si">{destination_host}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;COPYING </span><span class="si">{source_table_name}</span><span class="s1"> in </span><span class="si">{source_db}</span><span class="s1"> @ </span><span class="si">{source_host}</span><span class="s1"> TO </span><span class="si">{destination_table_name}</span><span class="s1"> in </span><span class="si">{destination_db}</span><span class="s1"> @ </span><span class="si">{destination_host}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">source_config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">source_host</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
     <span class="n">dest_config</span> <span class="o">=</span>   <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">destination_host</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="c1"># Get a geodataframe with the source_config</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">query_geo_table</span><span class="p">(</span><span class="n">source_db</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;SELECT * FROM </span><span class="si">{source_table_name}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">geom_col</span><span class="o">=</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">source_config</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">query_geo_table</span><span class="p">(</span><span class="n">source_db</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;SELECT * FROM </span><span class="si">{source_table_name}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">geom_col</span><span class="o">=</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">source_config</span><span class="p">)</span>
 
     <span class="c1"># Write the geodataframe to database with dest_config</span>
     <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">geodataframe_to_postgis</span><span class="p">(</span><span class="n">destination_db</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">destination_table_name</span><span class="p">,</span> <span class="n">output_epsg</span><span class="o">=</span><span class="n">epsg</span><span class="p">,</span> <span class="o">**</span><span class="n">dest_config</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="transfer_spatial_table"><a class="viewcode-back" href="../../../postGIS_tools.routines.copy_tables.html#postGIS_tools.routines.copy_tables.transfer_spatial_table">[docs]</a><span class="k">def</span> <span class="nf">transfer_spatial_table</span><span class="p">(</span>
+        <span class="n">source_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">destination_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">destination_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">source_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">destination_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">epsg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copy a spatial table from one db/host to another table/db/host.</span>
+<span class="sd">    If an ESPG is passed, this will also reproject the geom column for you.</span>
+
+<span class="sd">    TODO: type hints and params, docstrings</span>
+
+<span class="sd">    :param source_table_name: &#39;name_of_source_spatial_table&#39;</span>
+<span class="sd">    :param destination_table_name: &#39;name_of_new_copy&#39;</span>
+<span class="sd">    :param source_host: &#39;192.168.1.14&#39;</span>
+<span class="sd">    :param source_db: &#39;my_source_database&#39;</span>
+<span class="sd">    :param destination_host: &#39;localhost&#39;</span>
+<span class="sd">    :param destination_db: &#39;my_destination_database&#39;</span>
+<span class="sd">    :param epsg: None is default, but could be an int like: 2227</span>
+<span class="sd">    :return: nothing, but creates a copy of the source table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;## COPYING FROM </span><span class="si">{source_table_name}</span><span class="s1"> in </span><span class="si">{source_config}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;## </span><span class="se">\t</span><span class="s2"> TO </span><span class="si">{destination_table_name}</span><span class="s2"> in </span><span class="si">{destination_config}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">source_config</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">debug</span>
+    <span class="n">destination_config</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">debug</span>
+
+    <span class="c1"># Get a geodataframe with the source_config</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">query_geo_table</span><span class="p">(</span><span class="n">source_database</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;SELECT * FROM </span><span class="si">{source_table_name}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                                  <span class="n">geom_col</span><span class="o">=</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">source_config</span><span class="p">)</span>
+
+    <span class="c1"># Write the geodataframe to database with dest_config</span>
+    <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">geodataframe_to_postgis</span><span class="p">(</span><span class="n">destination_database</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">destination_table_name</span><span class="p">,</span>
+                                                    <span class="n">output_epsg</span><span class="o">=</span><span class="n">epsg</span><span class="p">,</span> <span class="o">**</span><span class="n">destination_config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="copy_spatial_table_same_db"><a class="viewcode-back" href="../../../postGIS_tools.routines.copy_tables.html#postGIS_tools.routines.copy_tables.copy_spatial_table_same_db">[docs]</a><span class="k">def</span> <span class="nf">copy_spatial_table_same_db</span><span class="p">(</span>
@@ -261,6 +307,22 @@
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
 
     <span class="n">copy_spatial_table</span><span class="p">(</span><span class="n">src_tbl</span><span class="p">,</span> <span class="n">dest_tbl</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">src_database</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">dest_database</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">get_postGIS_config</span><span class="p">()</span>
+    <span class="n">local_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span>
+    <span class="n">digital_ocean_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;digitalocean_projects&quot;</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">digital_ocean_config</span><span class="p">)</span>
+
+    <span class="n">local_db</span> <span class="o">=</span> <span class="s2">&quot;aa_2019_216_mv_modal_2019_12_04&quot;</span>
+    <span class="n">do_db</span> <span class="o">=</span> <span class="s2">&quot;mountain_view_modal_2019_216&quot;</span>
+
+    <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">make_new_database</span><span class="p">(</span><span class="n">do_db</span><span class="p">,</span> <span class="n">default_db</span><span class="o">=</span><span class="s2">&quot;defaultdb&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">digital_ocean_config</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">postGIS_tools</span><span class="o">.</span><span class="n">get_list_of_spatial_tables_in_db</span><span class="p">(</span><span class="n">local_db</span><span class="p">,</span> <span class="o">**</span><span class="n">local_config</span><span class="p">):</span>
+        <span class="n">transfer_spatial_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">local_db</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">do_db</span><span class="p">,</span> <span class="n">local_config</span><span class="p">,</span> <span class="n">digital_ocean_config</span><span class="p">)</span>
 </pre></div>
 
            </div>
