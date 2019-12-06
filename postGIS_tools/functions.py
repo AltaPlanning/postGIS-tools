@@ -1247,6 +1247,7 @@ def dump_database_to_sql_file(
     """ Save a database stored on a host to a .sql file, using TERMINAL on OSX
 
     TODO: update with declaration of username and port
+    TODO: REPLACE with URI
 
     :param db_to_backup: 'name_of_db'
     :param backup_folder: '/Users/my_name/Desktop/backup_folder'
@@ -1274,7 +1275,7 @@ def dump_database_to_sql_file(
     if THIS_SYSTEM == 'Darwin':
         c = f""" export PGPASSWORD={password}
                  cd "{backup_folder}"
-                 pg_dump -U postgres -h {host} {db_to_backup} > {sql_file} """
+                 pg_dump -U {username} -h {host} -p {port} {db_to_backup} > {sql_file} """
 
     elif THIS_SYSTEM == 'Windows':
         bkp_drive = backup_folder[:2]
@@ -1282,8 +1283,8 @@ def dump_database_to_sql_file(
         c = f""" set PGPASSWORD={password}
                  {bkp_drive}
                  cd "{backup_folder}"
-                 pg_dump -U postgres -h {host} {db_to_backup} > {sql_file} """
-        c = c.replace('\n             ', '& ')
+                 pg_dump -U {username} -h {host} -p {port} {db_to_backup} > {sql_file} """
+        c = c.replace('\n                 ', ' & ')
 
     # RUN THE COMMAND FROM COMMAND LINE
     print(c)
