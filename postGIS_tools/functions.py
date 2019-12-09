@@ -947,7 +947,7 @@ def csv_to_postgis(
 
     # Remove '.' and '-' from column names.
     # i.e. 'geo.display-label' becomes 'geodisplaylabel'
-    for s in ['.', '-']:
+    for s in ['.', '-', '(', ')']:
         df.columns = df.columns.str.replace(s, '')
 
     log_activity(db_name, "pGIS.csv_to_postgis", f"Loaded CSV from {csv_filepath}", **config)
