@@ -310,8 +310,9 @@ def execute_query(
 
     :return: None
     """
+    start_time = time.time()
+
     if debug:
-        start_time = time.time()
         print(f'## UPDATING via psycopg2 on {uri}:')
         print('\t', query)
 
@@ -491,11 +492,9 @@ def make_geotable_from_query(
     Quickly make a new spatial table in PostgreSQL with a query, and then prep the table
     by adding a uid, geom index, and entry into the geometry_columns table
 
-    :param database: 'my_database'
     :param new_tblname: 'name_of_my_new_table'
     :param query: "SELECT * FROM my_table WHERE highway = 'Local' "
     :param geom_colname: 'geom'
-    :param host: 'localhost'
     :return:
     """
 
@@ -644,11 +643,8 @@ def load_database_file(
     NOTE: ``psql`` must be accessible on the system path
 
     :param sql_file_path: '/path/to/sqlfile.sql'
-    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
-    :param username: valid PostgreSQL database username (string). eg: 'postgres'
-    :param password: password for the supplied username (string). eg: 'mypassword123'
-    :param port: port number for the PgSQL database. eg: 5432
-    :param uri: connection string
+    :param uri_defaultdb: connection string to default db for the cluster
+    :param uri_newdb: connection string to new database that will be loaded up via the .sql file
     :return:
     """
 
