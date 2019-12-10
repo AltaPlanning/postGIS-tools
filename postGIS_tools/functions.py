@@ -15,48 +15,6 @@ from geoalchemy2 import Geometry, WKTElement
 from postGIS_tools.configurations import THIS_SYSTEM, deconstruct_uri
 from postGIS_tools.queries.hexagon_grid import hex_grid_function
 from postGIS_tools.logs import log_activity
-from postGIS_tools.constants import PG_PASSWORD
-
-################################################################################
-# CONNECT TO THE DATABASE
-################################################################################
-
-#
-# def make_database_connection(
-#         db_name: str,
-#         method: str,
-#         uri: Union[bool, str] = False,
-#         host: str = 'localhost',
-#         username: str = 'postgres',
-#         password: str = PG_PASSWORD,
-#         port: int = 5432,
-#         debug: bool = True
-# ):
-#     """
-#     Create a connection object to a PostgreSQL database.
-#
-#     :param db_name: name of the database (string). eg: 'aa_santa_clara'
-#     :param method: name of library (string). Either 'psycopg2' or 'sqlalchemy'
-#     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
-#     :param username: valid PostgreSQL database username (string). eg: 'postgres'
-#     :param password: password for the supplied username (string). eg: 'mypassword123'
-#     :param port: port number for the PgSQL database. eg: 5432
-#     :param uri: connection string
-#     :return: `psycopg2.connect()` or `sqlalcehmy.create_engine()` object to be used for database I/O operations
-#     """
-#
-#     if not uri:
-#         # uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
-#         uri = make_uri(db_name, host=host, username=username, password=password, port=port)
-#
-#     if debug:
-#         print(f"Using {method} to connect to:\n\t{uri}")
-#
-#     if method == 'sqlalchemy':
-#         return sqlalchemy.create_engine(uri)
-#
-#     elif method == 'psycopg2':
-#         return psycopg2.connect(uri)
 
 ################################################################################
 # GET BASIC THINGS OUT OF THE DATABASE
