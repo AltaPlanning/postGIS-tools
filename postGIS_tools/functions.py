@@ -12,7 +12,7 @@ import sqlalchemy
 from geoalchemy2 import Geometry, WKTElement
 
 
-from postGIS_tools.configurations import THIS_SYSTEM
+from postGIS_tools.configurations import THIS_SYSTEM, make_uri
 from postGIS_tools.queries.hexagon_grid import hex_grid_function
 from postGIS_tools.logs import log_activity
 from postGIS_tools.constants import PG_PASSWORD
@@ -21,39 +21,42 @@ from postGIS_tools.constants import PG_PASSWORD
 # CONNECT TO THE DATABASE
 ################################################################################
 
-
-def make_database_connection(
-        db_name: str,
-        method: str,
-        host: str = 'localhost',
-        username: str = 'postgres',
-        password: str = PG_PASSWORD,
-        port: int = 5432,
-        debug: bool = True
-):
-    """
-    Create a connection object to a PostgreSQL database.
-
-    :param db_name: name of the database (string). eg: 'aa_santa_clara'
-    :param method: name of library (string). Either 'psycopg2' or 'sqlalchemy'
-    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
-    :param username: valid PostgreSQL database username (string). eg: 'postgres'
-    :param password: password for the supplied username (string). eg: 'mypassword123'
-    :param port: port number for the PgSQL database. eg: 5432
-    :param debug: boolean to print messages to console
-    :return: `psycopg2.connect()` or `sqlalcehmy.create_engine()` object to be used for database I/O operations
-    """
-
-    uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
-
-    if debug:
-        print(f"Using {method} to connect to:\n\t{uri}")
-
-    if method == 'sqlalchemy':
-        return sqlalchemy.create_engine(uri)
-
-    elif method == 'psycopg2':
-        return psycopg2.connect(uri)
+#
+# def make_database_connection(
+#         db_name: str,
+#         method: str,
+#         uri: Union[bool, str] = False,
+#         host: str = 'localhost',
+#         username: str = 'postgres',
+#         password: str = PG_PASSWORD,
+#         port: int = 5432,
+#         debug: bool = True
+# ):
+#     """
+#     Create a connection object to a PostgreSQL database.
+#
+#     :param db_name: name of the database (string). eg: 'aa_santa_clara'
+#     :param method: name of library (string). Either 'psycopg2' or 'sqlalchemy'
+#     :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
+#     :param username: valid PostgreSQL database username (string). eg: 'postgres'
+#     :param password: password for the supplied username (string). eg: 'mypassword123'
+#     :param port: port number for the PgSQL database. eg: 5432
+#     :param debug: boolean to print messages to console
+#     :return: `psycopg2.connect()` or `sqlalcehmy.create_engine()` object to be used for database I/O operations
+#     """
+#
+#     if not uri:
+#         # uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
+#         uri = make_uri(db_name, host=host, username=username, password=password, port=port)
+#
+#     if debug:
+#         print(f"Using {method} to connect to:\n\t{uri}")
+#
+#     if method == 'sqlalchemy':
+#         return sqlalchemy.create_engine(uri)
+#
+#     elif method == 'psycopg2':
+#         return psycopg2.connect(uri)
 
 ################################################################################
 # GET BASIC THINGS OUT OF THE DATABASE
@@ -61,36 +64,36 @@ def make_database_connection(
 
 
 def fetch_things_from_database(
-        query,
-        database,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        query: str,
+        database: str,
+        uri: Union[bool, str] = False,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = True
 ):
     """
     Use ``psycopg2`` to send query to database and return the ``.fetchall()`` result.
 
-    TODO: type hints and params
+    :param query: your query as `str`, e.g. `SELECT * FROM my_table`
+    :param database: `'name_of_the_database'` as `str`
 
-    :param query: 'SELECT * FROM my_table'
-    :param database: 'name_of_the_database'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
     :return: cursor.fetchall() object (list)
     """
-    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+
+    if not uri:
+        uri = make_uri(database, host=host, username=username, password=password, port=port)
 
     if debug:
-        print('QUERYING VIA psycopg2:')
         print('-' * 40)
+        print(f'## Fetching ALL from \n\t{database} \n\t{uri}')
         print(query)
 
-    connection = make_database_connection(database, 'psycopg2', **config)
+    connection = psycopg2.connect(uri)
     cursor = connection.cursor()
 
     cursor.execute(query)
-
     result = cursor.fetchall()
 
     cursor.close()
@@ -100,28 +103,29 @@ def fetch_things_from_database(
 
 
 def get_list_of_tables_in_db(
-        database,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        uri: Union[bool, str] = False,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = True
 ):
     """
     Return a list of all tables that exist in a given database.
 
-    TODO: type hints and params
-
     :param database: 'name_of_the_database'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+
     :return: list of all tables in database
     """
-    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+
+    if not uri:
+        uri = make_uri(database, host=host, username=username, password=password, port=port)
 
     # Get a list of all tables that are currently in the database
     q = """SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"""
 
-    tables = fetch_things_from_database(q, database, **config)
+    tables = fetch_things_from_database(q, database, uri=uri, debug=debug)
 
     tables_to_ignore = ['geography_columns', 'geometry_columns',
                         'spatial_ref_sys', 'raster_columns', 'raster_overviews']
@@ -132,34 +136,34 @@ def get_list_of_tables_in_db(
 
 
 def get_full_list_of_tables_in_db(
-        database,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        database: str,
+        uri: Union[bool, str] = False,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = True
 ):
     """
     Return a FULL list of all tables that exist in a given database.
     Unlike ``get_list_of_tables_in_db()``, this one does not ignore the following tables:
-    - 'geography_columns'
-    - 'geometry_columns'
-    - 'spatial_ref_sys'
-    - 'raster_columns'
-    - 'raster_overviews'
-
-    TODO: type hints and params
+        - 'geography_columns'
+        - 'geometry_columns'
+        - 'spatial_ref_sys'
+        - 'raster_columns'
+        - 'raster_overviews'
 
     :param database: 'name_of_the_database'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+
     :return: list of all tables in database
     """
-    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+    if not uri:
+        uri = make_uri(database, host=host, username=username, password=password, port=port)
 
     # Get a list of all tables that are currently in the database
     q = """SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"""
 
-    tables = fetch_things_from_database(q, database, **config)
+    tables = fetch_things_from_database(q, database, uri=uri, debug=debug)
 
     table_names = [t[0] for t in tables]
 
@@ -169,30 +173,30 @@ def get_full_list_of_tables_in_db(
 def get_list_of_columns_in_table(
         database,
         table,
-        host='localhost',
-        username='postgres',
-        password=PG_PASSWORD,
+        uri: Union[bool, str] = False,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
         port: int = 5432,
-        debug=False
+        debug: bool = True
 ):
     """
     Return a list of all columns that exist in a given table
 
-    TODO: type hints and params
-
     :param database: 'name_of_the_database'
     :param table: 'name_of_the_table'
-    :param host: by default is 'localhost', but could also be '192.168.1.14'
+
     :return: list of columns
     """
-    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
+    if not uri:
+        uri = make_uri(database, host=host, username=username, password=password, port=port)
 
-    q = """ SELECT column_name 
-            FROM information_schema.columns 
+    q = """ SELECT column_name
+            FROM information_schema.columns
             WHERE table_schema = 'public'
             AND table_name = '{}' """.format(table)
 
-    raw_result = fetch_things_from_database(q, database, **config)
+    raw_result = fetch_things_from_database(q, database, uri=uri, debug=debug)
 
     result = [t[0] for t in raw_result]
 
@@ -248,7 +252,7 @@ def get_database_list(
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     # Get a list of databases that aren't 'postgres'
-    q = """ SELECT datname FROM pg_database 
+    q = """ SELECT datname FROM pg_database
             WHERE datistemplate = false
                 AND datname != 'postgres'; """
 
@@ -558,7 +562,7 @@ def project_spatial_table(
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     qry = f'''ALTER TABLE {tablename}
-              ALTER COLUMN geom TYPE geometry({geom_type}, {new_epsg}) 
+              ALTER COLUMN geom TYPE geometry({geom_type}, {new_epsg})
               USING ST_Transform( ST_SetSRID( geom, {orig_epsg} ), {new_epsg} ); '''
     execute_query(database, qry, **config)
 
@@ -635,7 +639,7 @@ def register_geometry_column(
     config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
 
     query = f''' ALTER TABLE {spatial_table}
-                 ALTER COLUMN geom TYPE geometry({geom_type}, {epsg}) 
+                 ALTER COLUMN geom TYPE geometry({geom_type}, {epsg})
                                         USING ST_SetSRID(geom, {epsg})'''
     execute_query(database, query, **config)
     log_activity(database, "pGIS.register_geometry_column", query, **config)
