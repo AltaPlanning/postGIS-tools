@@ -92,71 +92,39 @@ def make_uri(
     return connection_string
 
 
-def saved_uris(
-        custom_config_file: Union[bool, str] = None,
-        verbose: bool = False
-) -> tuple:
+def deconstruct_uri(connection_string: str) -> dict:
     """
-    Read a `config.txt` file and return a tuple with a connection string for each postGIS configuration defined.
-    Each object is a `dict` keyed on the hostname defined in square brackets in the `.txt` file.
+    Parse the values in a psql connection string and return as a dictionary
 
-    `( {'localhost': uri1, 'remote_host': uri2},
-       {'localhost_superuser': uri1, 'remote_host_superuser': uri2} ) `
-
-    :param custom_config_file:
-    :param verbose: boolean to print out configuration values
-    :return: `tuple` with a `dict` for regular use and a `dict` for superuser use
+    :param connection_string: uri string
+    :return: dictionary with database connection info
     """
-    print(SEPARATOR)
+    values = {}
 
-    # Use the specified custom file if provided
-    if custom_config_file:
-        config_file = custom_config_file
+    uri_list = connection_string.split("?")
+    base_uri = uri_list[0]
 
-    # Otherwise, figure out the filepath dynamically by finding
-    # the user's OS-specific "Documents" folder.
+    # Break off the ?sslmode section
+    if len(uri_list) > 1:
+        sslmode = uri_list[1]
     else:
-        # Build the path to the "config.txt" file
-        config_file = os.path.join(LOCAL_CONFIG_FOLDER, "config.txt")
+        sslmode = False
 
-        # Make it by copying the config-sample.txt if it does not yet exist
-        if not os.path.exists(config_file):
+    # Get rid of postgresql://
+    base_uri = base_uri.replace(r"postgresql://", "")
 
-            # Make the folder if it does not yet exist:
-            if not os.path.exists(LOCAL_CONFIG_FOLDER):
-                os.mkdir(LOCAL_CONFIG_FOLDER)
+    # Split values up to get component parts
+    un_pw, host_port_db = base_uri.split("@")
+    username, password = un_pw.split(":")
+    host, port_db = host_port_db.split(":")
+    port, db = port_db.split(r"/")
 
-            # Copy the sample file
-            shutil.copyfile("../config-sample.txt", config_file)
-
-    print(f"LOADING postGIS CONFIGURATIONS FROM {config_file}")
-
-    # Parse the config.txt
-    config_object = configparser.ConfigParser()
-    config_object.read(config_file)
-
-    # Make a SUPERUSER_CONFIG dict with super user info and CONFIG without the keys_to_skip
-    configuration_dict = {}
-    superuser_config = {}
-    keys_to_skip = ["default_db", "super_user", "super_user_pw"]
-    for host in config_object.sections():
-        print(host)
-        configuration_dict[host] = {key: config_object[host][key] for key in config_object[host] if key not in keys_to_skip}
-
-        superuser_config[host] = {key: config_object[host][key] for key in config_object[host]}
-
-        superuser_config[host]["password"] = superuser_config[host].pop("super_user_pw")
-        superuser_config[host]["username"] = superuser_config[host].pop("super_user")
-
-    # Print out options defined in configuration file
-    if verbose:
-        for host in configuration_dict:
-            print(f"\t* {host} *")
-            print(f"\t\t {configuration_dict[host]} \n")
-
-    print(SEPARATOR, "\n")
-
-    return configuration_dict, superuser_config
+    return {"host": host,
+            "username": username,
+            "password": password,
+            "port": port,
+            "database": db,
+            "sslmode": sslmode}
 
 
 def get_postGIS_config(
@@ -205,20 +173,19 @@ def get_postGIS_config(
     superuser_config = {}
     keys_to_skip = ["default_db", "super_user", "super_user_pw"]
     for host in config_object.sections():
-        print(host)
+        print("\t ->", host)
+
         config[host] = {key: config_object[host][key] for key in config_object[host] if key not in keys_to_skip}
 
         superuser_config[host] = {key: config_object[host][key] for key in config_object[host]}
 
         superuser_config[host]["password"] = superuser_config[host].pop("super_user_pw")
         superuser_config[host]["username"] = superuser_config[host].pop("super_user")
+        superuser_config[host]["database"] = superuser_config[host].pop("default_db")
 
-    # Print out options defined in configuration file
-    if verbose:
-        for host in config:
-            print(f"\t* {host} *")
-            print(f"\t\t {config[host]} \n")
-
+        if verbose:
+            print(f"\t\t {config[host]}")
+            print(f"\t\t {superuser_config[host]} \n")
     print(SEPARATOR, "\n")
 
     return config, superuser_config
