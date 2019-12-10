@@ -18,31 +18,24 @@ Example
                         '2019-11-23 09:00:26 PST', 'Darwin', 'Aaron-MBP.local');
 
 """
+import os
 from datetime import datetime
 from pytz import timezone
 import psycopg2
 
-from postGIS_tools.constants import PG_PASSWORD
-from postGIS_tools.configurations import THIS_SYSTEM, THIS_USER, THIS_COMPUTER
+from postGIS_tools.configurations import THIS_SYSTEM, THIS_USER, THIS_COMPUTER, LOCAL_CONFIG_FOLDER
 
+SIMPLE_LOG_FILE = os.path.join(LOCAL_CONFIG_FOLDER, "LOGFILE-postGIS_tools.txt")
 
 def _make_log_table(
-        db_name: str,
-        host: str = 'localhost',
-        username: str = 'postgres',
-        password: str = PG_PASSWORD,
-        port: int = 5432,
+        uri: str,
         debug: bool = True
 ):
     """
     Execute a query to create the ``db_history`` table.
 
-    :param db_name: name of the database
-    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
-    :param username: valid PostgreSQL database username (string). eg: 'postgres'
-    :param password: password for the supplied username (string). eg: 'mypassword123'
-    :param port: port number for the PgSQL database. eg: 5432
-    :param debug: boolean to print messages to console
+    :param uri: connection string
+
     :return: creates ``db_history`` table within specified database
     """
     query_to_make_table = f"""
@@ -56,7 +49,6 @@ def _make_log_table(
             user_cpu VARCHAR(255)
         )
     """
-    uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
 
     if debug:
         print(f"Making db_history log table within {uri}")
@@ -77,28 +69,18 @@ def _make_log_table(
 
 
 def _log_table_exists(
-        db_name: str,
-        host: str = 'localhost',
-        username: str = 'postgres',
-        password: str = PG_PASSWORD,
-        port: int = 5432,
+        uri: str,
         debug: bool = True
 ):
     """
     Check if the ``db_history`` log table exists. If not, run ``_make_log_table()``
 
-    :param db_name: name of the database
-    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
-    :param username: valid PostgreSQL database username (string). eg: 'postgres'
-    :param password: password for the supplied username (string). eg: 'mypassword123'
-    :param port: port number for the PgSQL database. eg: 5432
-    :param debug: boolean to print messages to console
+    :param uri: connection string
     :return: boolean True or False if the log table exists
     """
 
     exists_query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
 
-    uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
     connection = psycopg2.connect(uri)
     cursor = connection.cursor()
     cursor.execute(exists_query)
@@ -119,15 +101,11 @@ def _log_table_exists(
 
 
 def log_activity(
-        db_name: str,
         function_name: str,
+        uri: str,
         query_text: str = "",
         local_timezone: str = "US/Pacific",
-        host: str = 'localhost',
-        username: str = 'postgres',
-        password: str = PG_PASSWORD,
-        port: int = 5432,
-        debug: bool = True
+        debug: bool = False
 ):
     """
     Record what was done to a database in a new row within the ``db_history`` table.
@@ -136,27 +114,27 @@ def log_activity(
 
     If the ``db_history`` table does not exist yet, make the table before inserting this row.
 
-    :param db_name: name of the database (string)
     :param function_name: the name of the function that was run (string)
+    :param uri: connection string
     :param query_text: the SQL text that was run (string)
     :param local_timezone: the user's local (or preferred) timezone (string). Must match ``datetime.datetime`` options
-    :param host: name of the pgSQL host (string). eg: 'localhost' or '192.168.1.14'
-    :param username: valid PostgreSQL database username (string). eg: 'postgres'
-    :param password: password for the supplied username (string). eg: 'mypassword123'
-    :param port: port number for the PgSQL database. eg: 5432
-    :param debug: boolean to print messages to console
+
     :return: inserts a new row into the ``db_history`` table
     """
-    uri = f'postgresql://{username}:{password}@{host}:{port}/{db_name}'
-    config = {'host': host, 'username': username, 'password': password, 'port': port, 'debug': debug}
-
-    # Create the db_history log table if it doesn't exist yet
-    if not _log_table_exists(db_name, **config):
-        _make_log_table(db_name, **config)
 
     # Get a timestamp for right now
     right_now = timezone(local_timezone).localize(datetime.now())
     right_now = right_now.strftime("%Y-%m-%d %H:%M:%S %Z")
+
+    # Create the db_history log table in the database if it doesn't exist yet
+    if not _log_table_exists(uri=uri, debug=debug):
+        _make_log_table(uri=uri, debug=debug)
+
+    # Create the local text file if it doesn't exist yet
+    if not os.path.exists(SIMPLE_LOG_FILE):
+        with open(SIMPLE_LOG_FILE, "w") as textfile:
+            textfile.write("uri, user, function, query_text, timestamp, system, computer\r\n")
+            textfile.close()
 
     # Escape any single quotes in the query text
     query_text = query_text.replace("'", "''")
@@ -169,9 +147,16 @@ def log_activity(
     """
 
     if debug:
-        print("Logging to db_history:")
+        print("""
+        Logging to db_history:""")
         print(insert_query)
 
+    # Do the text update
+    with open(SIMPLE_LOG_FILE, "a") as textfile:
+        textfile.write(", ".join([uri, THIS_USER, function_name, query_text, right_now, THIS_SYSTEM, THIS_COMPUTER]) + "\r\n")
+        textfile.close()
+
+    # Do the database update
     try:
         connection = psycopg2.connect(uri)
         cursor = connection.cursor()
@@ -188,4 +173,4 @@ def log_activity(
 
 
 if __name__ == "__main__":
-    log_activity("ds_test", "testing_function2", "UPDATE my_table SET my_col = 'my value'", debug=True)
+    pass

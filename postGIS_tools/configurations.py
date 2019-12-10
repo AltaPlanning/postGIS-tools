@@ -42,7 +42,7 @@ import getpass
 import shutil
 from typing import Union
 
-from postGIS_tools.constants import SEPARATOR
+from postGIS_tools.constants import SEPARATOR, PG_PASSWORD
 
 # Get user and system
 THIS_USER = getpass.getuser()
@@ -65,16 +65,78 @@ elif THIS_SYSTEM == "Windows":
 LOCAL_CONFIG_FOLDER = os.path.join(USER_DOCUMENTS_FOLDER, LOCAL_USER_CONFIG_FOLDER)
 
 
+def make_uri(
+        database: str,
+        host: str = 'localhost',
+        username: str = 'postgres',
+        password: str = PG_PASSWORD,
+        port: Union[int, str] = 5432,
+        sslmode: Union[bool, str] = False
+) -> str:
+    """
+    Assemble a PostgreSQL database connection string.
+
+    :param database: name of the database as `str`
+    :param host: name of the pgSQL host as `str` eg: `'localhost'` or `'192.168.1.14'`
+    :param username: valid PostgreSQL database username as `str`. eg: `'postgres'`
+    :param password: password for the supplied username as `str`. eg: `'mypassword123'`
+    :param port: port number for the PgSQL database as `str` or `int` eg: `5432`
+    :param sslmode: `False` or sslmode parameter as `str` eg: `'require'`
+    :return: database connection string as `str`
+    """
+    connection_string = f"postgresql://{username}:{password}@{host}:{port}/{database}"
+
+    if sslmode:
+        connection_string += f"?sslmode={sslmode}"
+
+    return connection_string
+
+
+def deconstruct_uri(connection_string: str) -> dict:
+    """
+    Parse the values in a psql connection string and return as a dictionary
+
+    :param connection_string: uri string
+    :return: dictionary with database connection info
+    """
+    values = {}
+
+    uri_list = connection_string.split("?")
+    base_uri = uri_list[0]
+
+    # Break off the ?sslmode section
+    if len(uri_list) > 1:
+        sslmode = uri_list[1]
+    else:
+        sslmode = False
+
+    # Get rid of postgresql://
+    base_uri = base_uri.replace(r"postgresql://", "")
+
+    # Split values up to get component parts
+    un_pw, host_port_db = base_uri.split("@")
+    username, password = un_pw.split(":")
+    host, port_db = host_port_db.split(":")
+    port, db = port_db.split(r"/")
+
+    return {"host": host,
+            "username": username,
+            "password": password,
+            "port": port,
+            "database": db,
+            "sslmode": sslmode}
+
+
 def get_postGIS_config(
         custom_config_file: Union[bool, str] = None,
         verbose: bool = False
 ) -> tuple:
     """
-    Read a config.txt file and return a tuple wiht dictionaries for each postGIS configuration defined,
+    Read a `config.txt` file and return a tuple with dictionaries for each postGIS configuration defined.
     Simple CONFIG is keyed on host, username, password, and port.
     CONFIG_FULL also has keys for super_user and default_db
 
-    :param custom_config_path:
+    :param custom_config_file:
     :param verbose: boolean to print out configuration values
     :return:
     """
@@ -111,20 +173,19 @@ def get_postGIS_config(
     superuser_config = {}
     keys_to_skip = ["default_db", "super_user", "super_user_pw"]
     for host in config_object.sections():
-        print(host)
+        print("\t ->", host)
+
         config[host] = {key: config_object[host][key] for key in config_object[host] if key not in keys_to_skip}
 
         superuser_config[host] = {key: config_object[host][key] for key in config_object[host]}
 
         superuser_config[host]["password"] = superuser_config[host].pop("super_user_pw")
         superuser_config[host]["username"] = superuser_config[host].pop("super_user")
+        superuser_config[host]["database"] = superuser_config[host].pop("default_db")
 
-    # Print out options defined in configuration file
-    if verbose:
-        for host in config:
-            print(f"\t* {host} *")
-            print(f"\t\t {config[host]} \n")
-
+        if verbose:
+            print(f"\t\t {config[host]}")
+            print(f"\t\t {superuser_config[host]} \n")
     print(SEPARATOR, "\n")
 
     return config, superuser_config
