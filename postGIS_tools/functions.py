@@ -1004,28 +1004,34 @@ def dump_database_to_sql_file(
     database_name = deconstruct_uri(uri)["database"]
 
     # USE PG_DUMP VIA COMMAND LINE TO SAVE A .SQL FILE
-    sql_file = f'{database_name}_{today}.sql'
+    sql_name = f'{database_name}_{today}.sql'
+    sql_file = os.path.join(backup_folder, sql_name)
 
-    print(f'## Using pg_dump to back up {database_name} to {sql_file}')
+    print(f'## Using pg_dump to back up {database_name} to {sql_name}')
 
     log_activity('pGIS.dump_database_to_sql_file',
                  uri=uri,
-                query_text=f"Using pg_dump to create {sql_file}",
+                query_text=f"Using pg_dump to create {sql_name}",
                  debug=debug)
 
-    if THIS_SYSTEM == 'Darwin':
-        c = f""" pg_dump {uri} > {sql_file} """
+    # if THIS_SYSTEM == 'Darwin':
+    #     c = f""" pg_dump {uri} > {sql_name} """
+    #
+    # elif THIS_SYSTEM == 'Windows':
+    #     # bkp_drive = backup_folder[:2]
+    #
+    #     # c = f""" set PGPASSWORD={password}
+    #     #          {bkp_drive}
+    #     #          cd "{backup_folder}"
+    #     #          pg_dump -U {username} -h {host} -p {port} {db_to_backup} > {sql_file} """
+    #     c = f""" pg_dump {uri} > {sql_name} """
+    #     c = c.replace('\n                 ', ' & ')
 
-    elif THIS_SYSTEM == 'Windows':
-        # bkp_drive = backup_folder[:2]
+    system_call = f'pg_dump {uri} > "{sql_file}" '
 
-        # c = f""" set PGPASSWORD={password}
-        #          {bkp_drive}
-        #          cd "{backup_folder}"
-        #          pg_dump -U {username} -h {host} -p {port} {db_to_backup} > {sql_file} """
-        c = f""" pg_dump {uri} > {sql_file} """
-        c = c.replace('\n                 ', ' & ')
 
     # RUN THE COMMAND FROM COMMAND LINE
-    print(c)
-    os.system(c)
+    print(system_call)
+    os.system(system_call)
+
+    return sql_file
