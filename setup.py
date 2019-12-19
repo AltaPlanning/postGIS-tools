@@ -4,10 +4,12 @@ Overview of ``setup.py``
 This script is required for the ``pip install`` process to work.
 """
 
+__version__ = "1.2.1"
+
 from setuptools import setup, find_packages
 
-long_description = """
-postGIS_tools is a pip-installable helper module
+long_description = f"""
+postGIS_tools v{__version__} is a pip-installable helper module
 that supports spatial data science work in PostgreSQL/PostGIS
 """
 
@@ -19,7 +21,7 @@ pkgs = find_packages()
 
 setup(
     name='postGIS_tools',
-    version='1.2.0',
+    version=__version__,
     author='Aaron Fraint, AICP',
     author_email='aaronfraint@altaplanning.com',
     long_description=long_description,
