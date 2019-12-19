@@ -15,3 +15,5 @@ from postGIS_tools.functions import *
 from postGIS_tools.configurations import *
 from postGIS_tools.routines.copy_tables import *
 from postGIS_tools.logs import log_activity
+
+CONFIG, SUPERUSER_CONFIG = get_postGIS_config()
