@@ -160,7 +160,7 @@ def get_postGIS_config(
                 os.mkdir(LOCAL_CONFIG_FOLDER)
 
             # Copy the sample file
-            shutil.copyfile("../config-sample.txt", config_file)
+            shutil.copyfile(os.path.join(os.getcwd(), "config-sample.txt"), config_file)
 
     print(f"LOADING postGIS CONFIGURATIONS FROM {config_file}")
 
