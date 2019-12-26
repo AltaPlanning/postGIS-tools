@@ -433,7 +433,9 @@ def prep_spatial_table(
     """
 
     # Add a primary key column named 'uid'
-    unique_id_query = f'ALTER TABLE {spatial_table_name} ADD uid serial PRIMARY KEY;'
+    unique_id_query = f"""
+        ALTER TABLE {spatial_table_name} DROP COLUMN IF EXISTS uid;
+        ALTER TABLE {spatial_table_name} ADD uid serial PRIMARY KEY;"""
     execute_query(unique_id_query, uri=uri, debug=debug)
 
     # Create a spatial index on the 'geom' column
