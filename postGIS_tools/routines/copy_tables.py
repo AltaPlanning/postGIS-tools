@@ -91,8 +91,8 @@ def transfer_spatial_table(
     """
 
     if debug:
-        print(f'## COPYING FROM {source_table_name} in {source_config}')
-        print(f"## \t TO {destination_table_name} in {destination_config}")
+        print(f'## COPYING FROM {source_table_name} at {source_uri}')
+        print(f"## \t TO {destination_table_name} in {destination_uri}")
 
     if destination_table_name is None:
         destination_table_name = source_table_name
