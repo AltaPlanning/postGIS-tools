@@ -73,8 +73,8 @@ def copy_spatial_table(
 def transfer_spatial_table(
         source_table_name: str,
         source_uri: str,
+        destination_table_name: str,
         destination_uri: str,
-        destination_table_name: Union[bool, str] = None,
         epsg: Union[bool, int] = None,
         debug: bool = True
 ):
@@ -93,9 +93,6 @@ def transfer_spatial_table(
     if debug:
         print(f'## COPYING FROM {source_table_name} at {source_uri}')
         print(f"## \t TO {destination_table_name} in {destination_uri}")
-
-    if destination_table_name is None:
-        destination_table_name = source_table_name
 
     # Get a geodataframe with the source_uri
     gdf = postGIS_tools.functions.query_geo_table(f'SELECT * FROM {source_table_name}', source_uri,
