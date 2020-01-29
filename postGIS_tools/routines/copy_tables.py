@@ -72,11 +72,9 @@ def copy_spatial_table(
 
 def transfer_spatial_table(
         source_table_name: str,
-        source_database: str,
-        destination_table_name: str,
-        destination_database: str,
-        source_config: dict,
-        destination_config: dict,
+        source_uri: str,
+        destination_uri: str,
+        destination_table_name: Union[bool, str] = None,
         epsg: Union[bool, int] = None,
         debug: bool = True
 ):
@@ -84,14 +82,10 @@ def transfer_spatial_table(
     Copy a spatial table from one db/host to another table/db/host.
     If an ESPG is passed, this will also reproject the geom column for you.
 
-    TODO: type hints and params, docstrings
+    TODO: docstring
 
     :param source_table_name: 'name_of_source_spatial_table'
-    :param destination_table_name: 'name_of_new_copy'
-    :param source_host: '192.168.1.14'
-    :param source_db: 'my_source_database'
-    :param destination_host: 'localhost'
-    :param destination_db: 'my_destination_database'
+    :param destination_table_name: 'name_of_new_copy'. If ``None`` then will use the source table name.
     :param epsg: None is default, but could be an int like: 2227
     :return: nothing, but creates a copy of the source table
     """
@@ -100,16 +94,16 @@ def transfer_spatial_table(
         print(f'## COPYING FROM {source_table_name} in {source_config}')
         print(f"## \t TO {destination_table_name} in {destination_config}")
 
-    source_config['debug'] = debug
-    destination_config['debug'] = debug
+    if destination_table_name is None:
+        destination_table_name = source_table_name
 
-    # Get a geodataframe with the source_config
-    gdf = postGIS_tools.functions.query_geo_table(source_database, f'SELECT * FROM {source_table_name}',
-                                                  geom_col='geom', **source_config)
+    # Get a geodataframe with the source_uri
+    gdf = postGIS_tools.functions.query_geo_table(f'SELECT * FROM {source_table_name}', source_uri,
+                                                  geom_col='geom', debug=debug)
 
     # Write the geodataframe to database with dest_config
-    postGIS_tools.functions.geodataframe_to_postgis(destination_database, gdf, destination_table_name,
-                                                    output_epsg=epsg, **destination_config)
+    postGIS_tools.functions.geodataframe_to_postgis(gdf, destination_table_name, destination_uri,
+                                                    output_epsg=epsg, debug=debug)
 
 
 def copy_spatial_table_same_db(
