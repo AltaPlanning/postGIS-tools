@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.7*
-  - pyproj=1.9.*
+  - pyproj
   - geopandas
   - psycopg2
   - geoalchemy2
