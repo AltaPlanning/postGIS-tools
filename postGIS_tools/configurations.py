@@ -41,6 +41,7 @@ import configparser
 import getpass
 import shutil
 from typing import Union
+import urllib
 
 from postGIS_tools.constants import SEPARATOR, PG_PASSWORD
 
@@ -159,8 +160,9 @@ def get_postGIS_config(
             if not os.path.exists(LOCAL_CONFIG_FOLDER):
                 os.mkdir(LOCAL_CONFIG_FOLDER)
 
-            # Copy the sample file
-            shutil.copyfile(os.path.join(os.getcwd(), "config-sample.txt"), config_file)
+            # Copy the sample file directly from Github
+            config_url = "https://raw.githubusercontent.com/aaronfraint/postGIS-tools/master/config-sample.txt"
+            urllib.request.urlretrieve(config_url, config_file)
 
     print(f"LOADING postGIS CONFIGURATIONS FROM {config_file}")
 
@@ -192,4 +194,5 @@ def get_postGIS_config(
 
 
 if __name__ == "__main__":
-    get_postGIS_config(verbose=True)
+    # get_postGIS_config(verbose=True)
+    pass
