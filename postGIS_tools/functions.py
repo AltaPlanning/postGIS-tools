@@ -803,17 +803,18 @@ def geodataframe_to_postgis(
 
     # Manually set the EPSG if the user passes one
     if src_epsg:
-        geodataframe.crs = {"init": f"epsg:{src_epsg}"}
+        geodataframe.crs = f"epsg:{src_epsg}"
         epsg_code = src_epsg
 
     # Otherwise, try to get the EPSG value directly from the geodataframe
     else:
         try:
-            # gdf should have a CRS stored like this: {'init': 'epsg:4326'}
-            if "init" in geodataframe.crs:
+            # Older geodataframes has CRS stored as a dict: {'init': 'epsg:4326'}
+            if type(geodataframe.crs) == dict:
                 epsg_code = int(geodataframe.crs['init'].split(" ")[0].split(':')[1])
+            # Now geopandas has a different approach:
             else:
-                epsg_code = int(str(geodataframe.crs).split(" ")[0].split(':')[1])
+                epsg_code = int(str(geodataframe.crs).split(':')[1])
         except:
             print('This geodataframe does not have a valid EPSG. Aborting.')
             print(geodataframe.crs)
