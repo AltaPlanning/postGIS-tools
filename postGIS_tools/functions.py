@@ -813,7 +813,7 @@ def geodataframe_to_postgis(
             if "init" in geodataframe.crs:
                 epsg_code = int(geodataframe.crs['init'].split(" ")[0].split(':')[1])
             else:
-                epsg_code = int(geodataframe.crs.split(" ")[0].split(':')[1])
+                epsg_code = int(str(geodataframe.crs).split(" ")[0].split(':')[1])
         except:
             print('This geodataframe does not have a valid EPSG. Aborting.')
             print(geodataframe.crs)
